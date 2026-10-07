@@ -1,59 +1,240 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import Footer from '../components/Footer.astro';
+
+const title = 'Ana Carolina Gomes | SEO & Digital PR Specialist';
+const description =
+	'SEO specialist focused on link acquisition, Digital PR and AI-assisted SEO workflows for competitive, regulated markets.';
+
+// Hero numbers. Only real, verifiable results.
+const stats = [
+	{ value: '250+', label: 'high-authority backlinks secured per quarter' },
+	{ value: '25%', label: 'lower average cost per link' },
+	{ value: '20+', label: 'media and affiliate partners managed' },
+];
+
+// Person schema: helps Google connect this site to you
+const personSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'Person',
+	name: 'Ana Carolina Gomes',
+	jobTitle: 'SEO & Digital PR Specialist',
+	url: 'https://ac-mkt.github.io',
+	sameAs: ['https://www.linkedin.com/in/anacpsg'],
+	address: { '@type': 'PostalAddress', addressRegion: 'Minas Gerais', addressCountry: 'BR' },
+	knowsAbout: [
+		'Search Engine Optimization',
+		'Link Building',
+		'Digital PR',
+		'Generative Engine Optimization',
+		'Python',
+	],
+};
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={title} description={description} />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600&display=swap"
+			rel="stylesheet"
+		/>
+		<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
 	</head>
 	<body>
 		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to
-				build a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your{' '}
-				<code>astro.config.mjs</code> file. You can customize your setup with{' '}
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like
-				Tailwind, React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>
-					Edit this page in <code>src/pages/index.astro</code>
-				</li>
-				<li>
-					Edit the site header items in <code>src/components/Header.astro</code>
-				</li>
-				<li>
-					Add your name to the footer in <code>src/components/Footer.astro</code>
-				</li>
-				<li>
-					Check out the included blog posts in <code>src/content/blog/</code>
-				</li>
-				<li>
-					Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code>
-				</li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to{' '}
-				<a href="https://docs.astro.build/">read the docs</a> or{' '}
-				<a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out{' '}
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a> by{' '}
-				<a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+		<main class="home">
+			<section class="hero">
+				<div class="hero-text">
+					<ul class="stats">
+						{
+							stats.map((stat) => (
+								<li>
+									<span class="stat-value">{stat.value}</span>
+									<span class="stat-label">{stat.label}</span>
+								</li>
+							))
+						}
+					</ul>
+
+					<h1>Ana Carolina Gomes</h1>
+
+					<p class="intro">
+						SEO and Digital PR specialist. I help brands earn authority in search through link
+						acquisition, media partnerships and outreach in highly competitive, regulated markets,
+						and I build AI-assisted workflows that make SEO operations faster and compliance-safe.
+					</p>
+
+					<div class="actions">
+						<a class="btn btn-primary" href="/case-studies">See case studies</a>
+						<a class="btn" href="/Ana-Carolina-Gomes-CV.pdf" download>Download CV</a>
+					</div>
+				</div>
+
+				<!-- Photo placeholder: replace with your photo later -->
+				<figure class="portrait" aria-hidden="true">
+					<span>AC</span>
+				</figure>
+			</section>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	:global(body) {
+		background: #f2f2f0;
+		color: #1f1f1f;
+		font-family: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif;
+	}
+
+	.home {
+		width: auto;
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: clamp(2rem, 6vw, 5rem) clamp(1.25rem, 4vw, 3rem) 4rem;
+	}
+
+	.hero {
+		display: grid;
+		grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+		gap: clamp(2rem, 5vw, 5rem);
+		align-items: end;
+	}
+
+	/* Stats */
+	.stats {
+		display: flex;
+		flex-wrap: wrap;
+		gap: clamp(1.5rem, 4vw, 3rem);
+		margin: 0 0 clamp(2.5rem, 6vw, 4.5rem);
+		padding: 0;
+		list-style: none;
+	}
+
+	.stat-value {
+		display: block;
+		font-size: clamp(1.75rem, 3vw, 2.25rem);
+		font-weight: 500;
+		letter-spacing: -0.02em;
+		line-height: 1;
+	}
+
+	.stat-label {
+		display: block;
+		max-width: 15ch;
+		margin-top: 0.5rem;
+		color: #5e5e5e;
+		font-size: 0.8rem;
+		line-height: 1.4;
+	}
+
+	/* Name */
+	h1 {
+		margin: 0 0 1.75rem;
+		color: #1f1f1f;
+		font-size: clamp(3rem, 8.5vw, 6.75rem);
+		font-weight: 500;
+		letter-spacing: -0.045em;
+		line-height: 0.92;
+	}
+
+	.intro {
+		max-width: 34rem;
+		margin: 0 0 2.25rem;
+		color: #3a3a3a;
+		font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+		line-height: 1.55;
+	}
+
+	/* Buttons */
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.8rem 1.4rem;
+		border: 1px solid #1f1f1f;
+		border-radius: 999px;
+		color: #1f1f1f;
+		font-size: 0.95rem;
+		line-height: 1;
+		text-decoration: none;
+		transition:
+			background-color 0.15s ease,
+			border-color 0.15s ease,
+			color 0.15s ease;
+	}
+
+	.btn:hover {
+		background: #1f1f1f;
+		color: #f2f2f0;
+	}
+
+	.btn-primary {
+		background: #1f1f1f;
+		color: #f2f2f0;
+	}
+
+	/* Classic hyperlink blue: a quiet nod to link building */
+	.btn-primary:hover {
+		background: #1f3fbf;
+		border-color: #1f3fbf;
+	}
+
+	.btn:focus-visible {
+		outline: 2px solid #1f3fbf;
+		outline-offset: 3px;
+	}
+
+	/* Photo */
+	.portrait {
+		display: grid;
+		place-items: center;
+		margin: 0;
+		aspect-ratio: 4 / 5;
+		overflow: hidden;
+		background: #e3e3e0;
+		border-radius: 4px;
+	}
+
+	.portrait span {
+		color: #c9c9c5;
+		font-size: clamp(4rem, 10vw, 8rem);
+		font-weight: 500;
+		letter-spacing: -0.05em;
+	}
+
+	/* When the real photo is in: black and white, like the Finox reference */
+	.portrait :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: grayscale(1);
+	}
+
+	@media (max-width: 860px) {
+		.hero {
+			grid-template-columns: 1fr;
+		}
+
+		.portrait {
+			max-width: 420px;
+			aspect-ratio: 1 / 1;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.btn {
+			transition: none;
+		}
+	}
+</style>
