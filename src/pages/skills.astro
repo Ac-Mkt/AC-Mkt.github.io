@@ -1,0 +1,200 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const title = 'Skills | Ana Carolina Gomes';
+const description =
+	'Off-page SEO, Digital PR, on-page SEO, GEO and AI automation skills, tools and certifications of Ana Carolina Gomes.';
+
+const groups = [
+	{
+		name: 'Off-page SEO and Digital PR',
+		summary: 'Earning authority through links, media coverage and long-term partnerships.',
+		items: [
+			'Link building',
+			'Digital PR',
+			'Outreach',
+			'Partner negotiation',
+			'Competitive backlink analysis',
+			'Content briefs',
+		],
+	},
+	{
+		name: 'SEO and GEO',
+		summary: 'Making content easy to find, understand and cite, for search engines and AI answers.',
+		items: [
+			'On-page SEO',
+			'Keyword research and search intent',
+			'Schema markup (JSON-LD)',
+			'Generative Engine Optimization (GEO)',
+			'Answer Engine Optimization (AEO)',
+			'Google AI Overviews',
+		],
+	},
+	{
+		name: 'AI and automation',
+		summary: 'Building workflows that make SEO operations faster, more consistent and safer.',
+		items: ['Claude Code', 'Python (openpyxl)', 'Prompt engineering', 'ChatGPT', 'Gemini', 'Perplexity'],
+	},
+	{
+		name: 'Tools and analytics',
+		summary: 'The platforms I use day to day for research, tracking and reporting.',
+		items: ['Ahrefs', 'Semrush', 'Google Search Console', 'Google Analytics', 'Excel'],
+	},
+	{
+		name: 'Currently learning',
+		summary: 'Where I am investing my study time right now.',
+		items: ['Technical SEO', 'SQL', 'BigQuery', 'Looker Studio'],
+	},
+];
+
+const certifications = [
+	{ name: 'GenAI for SEO: A Hands-On Playbook', issuer: 'IBM', year: '2026' },
+	{ name: 'Mastering Digital PR with Brian Dean', issuer: 'Semrush', year: '2025' },
+	{ name: 'Content Optimization Masterclass', issuer: 'Surfer', year: '2025' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<header class="page-head">
+				<h1>Skills</h1>
+				<p>
+					What I work with, grouped by area. For how these skills play out in practice, see the
+					<a href="/case-studies/">case studies</a>.
+				</p>
+			</header>
+
+			{
+				groups.map((group) => (
+					<section class="group">
+						<div>
+							<h2>{group.name}</h2>
+							<p class="summary">{group.summary}</p>
+						</div>
+						<ul class="tags">
+							{group.items.map((item) => (
+								<li>{item}</li>
+							))}
+						</ul>
+					</section>
+				))
+			}
+
+			<section class="group">
+				<div>
+					<h2>Certifications</h2>
+				</div>
+				<ul class="certs">
+					{
+						certifications.map((cert) => (
+							<li>
+								<span class="cert-name">{cert.name}</span>
+								<span class="cert-meta">
+									{cert.issuer}, {cert.year}
+								</span>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.page-head {
+		max-width: 44rem;
+		margin-bottom: clamp(3rem, 7vw, 5rem);
+	}
+
+	h1 {
+		margin-bottom: 1.25rem;
+		font-size: clamp(2.75rem, 7vw, 5rem);
+		letter-spacing: -0.04em;
+		line-height: 0.95;
+	}
+
+	.page-head p {
+		margin: 0;
+		font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+		line-height: 1.55;
+	}
+
+	.group {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+		gap: 1.25rem clamp(2rem, 5vw, 4rem);
+		padding: 2rem 0;
+		border-top: 1px solid var(--rule);
+	}
+
+	.group h2 {
+		margin-bottom: 0.5rem;
+		font-size: 1.35rem;
+	}
+
+	.summary {
+		max-width: 26rem;
+		margin: 0;
+		color: var(--muted);
+		font-size: 0.95rem;
+		line-height: 1.5;
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		align-content: start;
+		gap: 0.6rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.tags li {
+		padding: 0.5rem 1rem;
+		border: 1px solid #c9c9c5;
+		border-radius: 999px;
+		color: var(--ink);
+		font-size: 0.9rem;
+		line-height: 1.2;
+	}
+
+	.certs {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.certs li + li {
+		margin-top: 1.1rem;
+	}
+
+	.cert-name {
+		display: block;
+		color: var(--ink);
+		font-weight: 500;
+		line-height: 1.35;
+	}
+
+	.cert-meta {
+		display: block;
+		color: var(--muted);
+		font-size: 0.85rem;
+	}
+
+	@media (max-width: 760px) {
+		.group {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

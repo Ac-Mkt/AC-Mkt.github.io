@@ -9,27 +9,14 @@ export default defineConfig({
 	site: 'https://ac-mkt.github.io',
 	integrations: [mdx(), sitemap()],
 	fonts: [
-		{
-			provider: fontProviders.local(),
-			name: 'Atkinson',
-			cssVariable: '--font-atkinson',
+				{
+			provider: fontProviders.google(),
+			name: 'Schibsted Grotesk',
+			cssVariable: '--font-schibsted',
+			weights: [400, 500, 600],
+			styles: ['normal', 'italic'],
+			subsets: ['latin', 'latin-ext'],
 			fallbacks: ['sans-serif'],
-			options: {
-				variants: [
-					{
-						src: ['./src/assets/fonts/atkinson-regular.woff'],
-						weight: 400,
-						style: 'normal',
-						display: 'swap',
-					},
-					{
-						src: ['./src/assets/fonts/atkinson-bold.woff'],
-						weight: 700,
-						style: 'normal',
-						display: 'swap',
-					},
-				],
-			},
 		},
 	],
 });

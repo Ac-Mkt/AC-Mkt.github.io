@@ -1,0 +1,109 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const title = 'Contact | Ana Carolina Gomes';
+const description =
+	'Get in touch with Ana Carolina Gomes, SEO and Digital PR specialist, by email or LinkedIn.';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<header class="page-head">
+				<h1>Let's talk</h1>
+				<p>
+					I'm open to SEO, Digital PR and Growth roles, and to conversations about projects where
+					authority building, data and automation come together.
+				</p>
+			</header>
+
+			<dl class="channels">
+				<div>
+					<dt>Email</dt>
+					<dd><a href="mailto:carolsg02@gmail.com">carolsg02@gmail.com</a></dd>
+				</div>
+				<div>
+					<dt>LinkedIn</dt>
+					<dd><a href="https://www.linkedin.com/in/anacpsg" rel="me">linkedin.com/in/anacpsg</a></dd>
+				</div>
+				<div>
+					<dt>Based in</dt>
+					<dd>Belo Horizonte, Brazil (UTC−3)</dd>
+				</div>
+				<div>
+					<dt>Working languages</dt>
+					<dd>Portuguese and English</dd>
+				</div>
+			</dl>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.page-head {
+		max-width: 44rem;
+		margin-bottom: clamp(3rem, 7vw, 5rem);
+	}
+
+	h1 {
+		margin-bottom: 1.25rem;
+		font-size: clamp(2.75rem, 7vw, 5rem);
+		letter-spacing: -0.04em;
+		line-height: 0.95;
+	}
+
+	.page-head p {
+		margin: 0;
+		font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+		line-height: 1.55;
+	}
+
+	.channels {
+		max-width: 48rem;
+		margin: 0;
+	}
+
+	.channels div {
+		display: grid;
+		grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
+		gap: 0.5rem 2rem;
+		padding: 1.25rem 0;
+		border-top: 1px solid var(--rule);
+	}
+
+	.channels div:last-child {
+		border-bottom: 1px solid var(--rule);
+	}
+
+	dt {
+		color: var(--muted);
+		font-size: 0.9rem;
+	}
+
+	dd {
+		margin: 0;
+		color: var(--ink);
+		font-size: clamp(1.1rem, 2vw, 1.35rem);
+		letter-spacing: -0.01em;
+		overflow-wrap: anywhere;
+	}
+
+	dd a {
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+	}
+
+	@media (max-width: 600px) {
+		.channels div {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

@@ -2,6 +2,8 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import CaseList from '../components/CaseList.astro';
+import { getCollection } from 'astro:content';
 
 const title = 'Ana Carolina Gomes | SEO & Digital PR Specialist';
 const description =
@@ -14,30 +16,10 @@ const stats = [
 	{ value: '20+', label: 'media and affiliate partners managed' },
 ];
 
-// Featured case studies. Each href becomes a page in /case-studies later.
-const featured = [
-	{
-		href: '/case-studies/multi-market-link-acquisition',
-		title: 'Multi-market link acquisition and Digital PR',
-		summary:
-			'Scaled an outreach and media partnership program across international markets while cutting acquisition costs.',
-		result: '250+ links per quarter, 25% lower cost per link',
-	},
-	{
-		href: '/case-studies/ai-briefing-workflow',
-		title: 'AI-assisted briefing workflow with compliance checks',
-		summary:
-			'Turned a spreadsheet into ready-to-use link building briefs with Claude Code and Python, flagging country-specific compliance conflicts automatically.',
-		result: 'Caught outdated disclaimers in the UK and Spain pilot',
-	},
-	{
-		href: '/case-studies/building-this-site',
-		title: 'Building this site: technical SEO from scratch',
-		summary:
-			'An Astro site on GitHub Pages with structured data, a sitemap and performance in mind from day one.',
-		result: 'Documented as I build',
-	},
-];
+// Featured case studies: the first three by "order" in src/content/case-studies
+const featured = (await getCollection('caseStudies'))
+	.sort((a, b) => a.data.order - b.data.order)
+	.slice(0, 3);
 
 const tools = [
 	'Ahrefs',
@@ -59,36 +41,12 @@ const certifications = [
 // Example: { quote: '...', name: 'Full Name', role: 'Head of SEO, Company' },
 const testimonials: { quote: string; name: string; role: string }[] = [];
 
-// Person schema: helps Google connect this site to you
-const personSchema = {
-	'@context': 'https://schema.org',
-	'@type': 'Person',
-	name: 'Ana Carolina Gomes',
-	jobTitle: 'SEO & Digital PR Specialist',
-	url: 'https://ac-mkt.github.io',
-	sameAs: ['https://www.linkedin.com/in/anacpsg'],
-	address: { '@type': 'PostalAddress', addressRegion: 'Minas Gerais', addressCountry: 'BR' },
-	knowsAbout: [
-		'Search Engine Optimization',
-		'Link Building',
-		'Digital PR',
-		'Generative Engine Optimization',
-		'Python',
-	],
-};
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600&display=swap"
-			rel="stylesheet"
-		/>
-		<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
 	</head>
 	<body>
 		<Header />
@@ -116,7 +74,7 @@ const personSchema = {
 					</p>
 
 					<div class="actions">
-						<a class="btn btn-primary" href="/case-studies">See case studies</a>
+						<a class="btn btn-primary" href="/case-studies/">See case studies</a>
 						<a class="btn" href="/Ana-Carolina-Gomes-CV.pdf" download>Download CV</a>
 					</div>
 				</div>
@@ -131,22 +89,8 @@ const personSchema = {
 			<section class="section" aria-labelledby="work-title">
 				<h2 id="work-title">Selected work</h2>
 				<div>
-					<ul class="work">
-						{
-							featured.map((item) => (
-								<li>
-									<a class="work-item" href={item.href}>
-										<span class="work-main">
-											<span class="work-title">{item.title}</span>
-											<span class="work-summary">{item.summary}</span>
-										</span>
-										<span class="work-result">{item.result}</span>
-									</a>
-								</li>
-							))
-						}
-					</ul>
-					<a class="text-link" href="/case-studies">All case studies</a>
+					<CaseList cases={featured} />
+					<a class="text-link" href="/case-studies/">All case studies</a>
 				</div>
 			</section>
 
@@ -207,12 +151,6 @@ const personSchema = {
 </html>
 
 <style>
-	:global(body) {
-		background: #f2f2f0;
-		color: #1f1f1f;
-		font-family: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif;
-	}
-
 	.home {
 		width: auto;
 		max-width: 1200px;
@@ -348,8 +286,7 @@ const personSchema = {
 	}
 
 	.btn:focus-visible,
-	.text-link:focus-visible,
-	.work-item:focus-visible {
+	.text-link:focus-visible {
 		outline: 2px solid #1f3fbf;
 		outline-offset: 3px;
 	}
@@ -372,59 +309,6 @@ const personSchema = {
 		font-weight: 500;
 		letter-spacing: -0.025em;
 		line-height: 1.1;
-	}
-
-	/* Selected work: an editorial list, whole row clickable */
-	.work {
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.work li + li {
-		border-top: 1px solid #d4d4d0;
-	}
-
-	.work-item {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(0, 13rem);
-		gap: 1.5rem 2.5rem;
-		padding: 1.5rem 0;
-		color: inherit;
-		text-decoration: none;
-	}
-
-	.work li:first-child .work-item {
-		padding-top: 0;
-	}
-
-	.work-title {
-		display: block;
-		margin-bottom: 0.5rem;
-		font-size: 1.2rem;
-		font-weight: 500;
-		letter-spacing: -0.01em;
-		line-height: 1.3;
-	}
-
-	.work-item:hover .work-title {
-		color: #1f3fbf;
-		text-decoration: underline;
-		text-underline-offset: 0.2em;
-	}
-
-	.work-summary {
-		display: block;
-		max-width: 38rem;
-		color: #5e5e5e;
-		font-size: 0.95rem;
-		line-height: 1.55;
-	}
-
-	.work-result {
-		color: #1f1f1f;
-		font-size: 0.9rem;
-		line-height: 1.45;
 	}
 
 	/* Tools and certifications */
@@ -536,13 +420,6 @@ const personSchema = {
 		.portrait {
 			max-width: 420px;
 			aspect-ratio: 1 / 1;
-		}
-	}
-
-	@media (max-width: 600px) {
-		.work-item {
-			grid-template-columns: 1fr;
-			gap: 0.75rem;
 		}
 	}
 

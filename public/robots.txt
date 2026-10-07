@@ -1,0 +1,5 @@
+# ACmkt: all crawlers welcome, including AI search crawlers
+User-agent: *
+Allow: /
+
+Sitemap: https://ac-mkt.github.io/sitemap-index.xml

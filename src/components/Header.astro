@@ -1,16 +1,19 @@
 ---
 // Main navigation. Add, remove or reorder pages here.
 const links = [
-	{ href: '/about', label: 'About' },
-	{ href: '/case-studies', label: 'Case Studies' },
-	{ href: '/skills', label: 'Skills' },
-	{ href: '/blog', label: 'Blog' },
-	{ href: '/contact', label: 'Contact' },
+	{ href: '/about/', label: 'About' },
+	{ href: '/case-studies/', label: 'Case Studies' },
+	{ href: '/skills/', label: 'Skills' },
+	{ href: '/blog/', label: 'Blog' },
+	{ href: '/contact/', label: 'Contact' },
 ];
 
 // Marks the current page in the menu (also works for /blog/post-name)
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isActive = (href: string) => path === href || path.startsWith(href + '/');
+const isActive = (href: string) => {
+	const target = href.replace(/\/$/, '');
+	return path === target || path.startsWith(target + '/');
+};
 ---
 
 <header class="site-header">

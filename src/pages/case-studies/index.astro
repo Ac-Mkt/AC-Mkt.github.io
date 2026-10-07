@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import CaseList from '../../components/CaseList.astro';
+
+const cases = (await getCollection('caseStudies')).sort((a, b) => a.data.order - b.data.order);
+
+const title = 'Case studies | Ana Carolina Gomes';
+const description =
+	'SEO, Digital PR and AI workflow case studies by Ana Carolina Gomes: the challenge, the strategy, the execution and the results.';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<header class="page-head">
+				<h1>Case studies</h1>
+				<p>
+					Professional work, course projects and personal builds. Each one covers the challenge, the
+					strategy, how it was executed and what came out of it. Client names and sensitive figures are
+					left out where needed.
+				</p>
+			</header>
+			<CaseList cases={cases} />
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.page-head {
+		max-width: 44rem;
+		margin-bottom: clamp(3rem, 7vw, 5rem);
+	}
+
+	h1 {
+		margin-bottom: 1.25rem;
+		font-size: clamp(2.75rem, 7vw, 5rem);
+		letter-spacing: -0.04em;
+		line-height: 0.95;
+	}
+
+	.page-head p {
+		margin: 0;
+		font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+		line-height: 1.55;
+	}
+</style>
