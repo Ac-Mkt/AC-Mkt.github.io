@@ -2,7 +2,7 @@
 
 :root {
 	/* Palette */
-	--paper: #efefef
+	--paper: #efefef;
 	--surface: #e3e3e0;
 	--rule: #d4d4d0;
 	--ink: #1f1f1f;
@@ -15,16 +15,6 @@
 	--content: 1200px;
 	--prose: 42rem;
 	--gutter: clamp(1.25rem, 4vw, 3rem);
-
-	/* Kept so the template's blog pages keep working */
-	--accent: #1f3fbf;
-	--accent-dark: #142a85;
-	--black: 31, 31, 31;
-	--gray: 94, 94, 94;
-	--gray-light: 227, 227, 224;
-	--gray-dark: 58, 58, 58;
-	--gray-gradient: rgba(242, 242, 240, 0), var(--paper);
-	--box-shadow: none;
 }
 
 *,
@@ -44,7 +34,6 @@ body {
 }
 
 main {
-	width: auto;
 	max-width: var(--content);
 	margin: 0 auto;
 	padding: clamp(2rem, 6vw, 4rem) var(--gutter);
@@ -147,13 +136,98 @@ hr {
 	border-top: 1px solid var(--rule);
 }
 
-.sr-only {
-	position: absolute !important;
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
-	clip: rect(1px, 1px, 1px, 1px);
-	white-space: nowrap;
+/* Page header shared by About, Blog, Case studies, Contact and Skills */
+.page-head {
+	max-width: 44rem;
+	margin-bottom: clamp(3rem, 7vw, 5rem);
+}
+
+.page-head h1 {
+	margin-bottom: 1.25rem;
+	font-size: clamp(2.75rem, 7vw, 5rem);
+	letter-spacing: -0.04em;
+	line-height: 0.95;
+}
+
+.page-head p {
+	margin: 0;
+	font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+	line-height: 1.55;
+}
+
+/* Back link and Markdown content, shared by blog posts and case studies */
+.back {
+	display: inline-block;
+	margin-bottom: clamp(2rem, 5vw, 3.5rem);
+	color: var(--muted);
+	font-size: 0.9rem;
+}
+
+.prose {
+	max-width: var(--prose);
+}
+
+.prose h2 {
+	margin-top: 2.75em;
+	font-size: 1.75rem;
+	scroll-margin-top: 1.5rem;
+}
+
+.prose h3 {
+	margin-top: 2em;
+	font-size: 1.2rem;
+	scroll-margin-top: 1.5rem;
+}
+
+.prose ul,
+.prose ol {
+	margin: 0 0 1.25em;
+	padding-left: 1.25em;
+}
+
+.prose li + li {
+	margin-top: 0.4em;
+}
+
+.prose table {
+	display: block;
+	margin: 1.5em 0 2em;
+	overflow-x: auto;
+}
+
+/* Buttons, used on Home and About */
+.actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+}
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.8rem 1.4rem;
+	border: 1px solid var(--ink);
+	border-radius: 999px;
+	color: var(--ink);
+	font-size: 0.95rem;
+	line-height: 1;
+	text-decoration: none;
+	transition:
+		background-color 0.15s ease,
+		border-color 0.15s ease,
+		color 0.15s ease;
+}
+
+.btn:hover,
+.btn-primary {
+	background: var(--ink);
+	color: var(--paper);
+}
+
+/* Classic hyperlink blue: a quiet nod to link building */
+.btn-primary:hover {
+	background: var(--link);
+	border-color: var(--link);
 }
 
 @media (prefers-reduced-motion: reduce) {

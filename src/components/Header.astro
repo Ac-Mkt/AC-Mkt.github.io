@@ -58,11 +58,11 @@ const isActive = (href: string) => {
 
 <style>
 	.site-header {
-		padding: 1.5rem clamp(1.25rem, 4vw, 3rem);
+		padding: 1.5rem var(--gutter);
 	}
 
 	.nav {
-		max-width: 1200px;
+		max-width: var(--content);
 		margin: 0 auto;
 		display: flex;
 		flex-wrap: wrap;
@@ -74,7 +74,7 @@ const isActive = (href: string) => {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.55rem;
-		color: #1f1f1f;
+		color: var(--ink);
 		text-decoration: none;
 	}
 
@@ -99,7 +99,7 @@ const isActive = (href: string) => {
 	.links a {
 		display: inline-block;
 		padding: 0.25rem 0;
-		color: #1f1f1f;
+		color: var(--ink);
 		font-size: 0.9rem;
 		text-decoration: none;
 		border-bottom: 1px solid transparent;
@@ -114,7 +114,7 @@ const isActive = (href: string) => {
 	.brand:focus-visible,
 	.links a:focus-visible,
 	.menu-toggle:focus-visible {
-		outline: 2px solid #1f1f1f;
+		outline: 2px solid var(--ink);
 		outline-offset: 4px;
 		border-radius: 2px;
 	}
@@ -130,9 +130,9 @@ const isActive = (href: string) => {
 			margin-left: auto;
 			padding: 0.4rem 0.9rem;
 			background: none;
-			border: 1px solid #1f1f1f;
+			border: 1px solid var(--ink);
 			border-radius: 999px;
-			color: #1f1f1f;
+			color: var(--ink);
 			font: inherit;
 			font-size: 0.85rem;
 			cursor: pointer;
@@ -153,12 +153,6 @@ const isActive = (href: string) => {
 		.links a {
 			padding: 0.6rem 0;
 			font-size: 1.05rem;
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.links a {
-			transition: none;
 		}
 	}
 </style>

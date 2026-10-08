@@ -21,8 +21,8 @@ const languages = ['Portuguese (native)', 'English (C1)', 'Spanish (A1)'];
 const profileSchema = {
 	'@context': 'https://schema.org',
 	'@type': 'ProfilePage',
-	url: 'https://ac-mkt.github.io/about/',
-	mainEntity: { '@id': 'https://ac-mkt.github.io/#person', name: 'Ana Carolina Gomes' },
+	url: new URL('/about/', Astro.site).href,
+	mainEntity: { '@id': new URL('/#person', Astro.site).href, name: 'Ana Carolina Gomes' },
 };
 ---
 
@@ -112,14 +112,6 @@ const profileSchema = {
 <style>
 	.page-head {
 		max-width: 48rem;
-		margin-bottom: clamp(3rem, 7vw, 5rem);
-	}
-
-	h1 {
-		margin-bottom: 1.25rem;
-		font-size: clamp(2.75rem, 7vw, 5rem);
-		letter-spacing: -0.04em;
-		line-height: 0.95;
 	}
 
 	.lead {
@@ -185,41 +177,7 @@ const profileSchema = {
 	}
 
 	.actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
 		margin-top: 2.25rem;
-	}
-
-	.btn {
-		display: inline-flex;
-		align-items: center;
-		padding: 0.8rem 1.4rem;
-		border: 1px solid var(--ink);
-		border-radius: 999px;
-		color: var(--ink);
-		font-size: 0.95rem;
-		line-height: 1;
-		text-decoration: none;
-		transition:
-			background-color 0.15s ease,
-			border-color 0.15s ease,
-			color 0.15s ease;
-	}
-
-	.btn:hover {
-		background: var(--ink);
-		color: var(--paper);
-	}
-
-	.btn-primary {
-		background: var(--ink);
-		color: var(--paper);
-	}
-
-	.btn-primary:hover {
-		background: var(--link);
-		border-color: var(--link);
 	}
 
 	@media (max-width: 860px) {

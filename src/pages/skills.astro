@@ -2,6 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { CERTIFICATIONS as certifications } from '../consts';
 
 const title = 'Skills | Ana Carolina Gomes';
 const description =
@@ -48,12 +49,6 @@ const groups = [
 		items: ['Technical SEO', 'SQL', 'BigQuery', 'Looker Studio'],
 	},
 ];
-
-const certifications = [
-	{ name: 'GenAI for SEO: A Hands-On Playbook', issuer: 'IBM', year: '2026' },
-	{ name: 'Mastering Digital PR with Brian Dean', issuer: 'Semrush', year: '2025' },
-	{ name: 'Content Optimization Masterclass', issuer: 'Surfer', year: '2025' },
-];
 ---
 
 <!doctype html>
@@ -67,8 +62,8 @@ const certifications = [
 			<header class="page-head">
 				<h1>Skills</h1>
 				<p>
-					What I work with, grouped by area. For how these skills play out in practice, see the
-					<a href="/case-studies/">case studies</a>.
+					What I work with, grouped by area. For how these skills play out in practice, see
+					the <a href="/case-studies/">case studies</a>.
 				</p>
 			</header>
 
@@ -111,24 +106,6 @@ const certifications = [
 </html>
 
 <style>
-	.page-head {
-		max-width: 44rem;
-		margin-bottom: clamp(3rem, 7vw, 5rem);
-	}
-
-	h1 {
-		margin-bottom: 1.25rem;
-		font-size: clamp(2.75rem, 7vw, 5rem);
-		letter-spacing: -0.04em;
-		line-height: 0.95;
-	}
-
-	.page-head p {
-		margin: 0;
-		font-size: clamp(1.05rem, 1.6vw, 1.2rem);
-		line-height: 1.55;
-	}
-
 	.group {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);

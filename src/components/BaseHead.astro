@@ -13,10 +13,11 @@ interface Props {
 	noindex?: boolean;
 }
 
+const DEFAULT_IMAGE = '/og-default.png';
 const {
 	title,
 	description,
-	image = '/og-default.png',
+	image = DEFAULT_IMAGE,
 	imageAlt = 'Ana Carolina Gomes, SEO and Digital PR Specialist',
 	type = 'website',
 	noindex = false,
@@ -110,8 +111,14 @@ const siteGraph = {
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={imageURL} />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
+{
+	image === DEFAULT_IMAGE && (
+		<>
+			<meta property="og:image:width" content="1200" />
+			<meta property="og:image:height" content="630" />
+		</>
+	)
+}
 <meta property="og:image:alt" content={imageAlt} />
 
 <!-- X / Twitter -->

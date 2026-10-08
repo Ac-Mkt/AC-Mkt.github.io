@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CaseList from '../components/CaseList.astro';
 import { getCollection } from 'astro:content';
+import { CERTIFICATIONS as certifications } from '../consts';
 
 const title = 'Ana Carolina Gomes | SEO & Digital PR Specialist';
 const description =
@@ -31,16 +32,9 @@ const tools = [
 	'Excel',
 ];
 
-const certifications = [
-	{ name: 'GenAI for SEO: A Hands-On Playbook', issuer: 'IBM', year: '2026' },
-	{ name: 'Mastering Digital PR with Brian Dean', issuer: 'Semrush', year: '2025' },
-	{ name: 'Content Optimization Masterclass', issuer: 'Surfer', year: '2025' },
-];
-
 // Add real recommendations here (e.g. from LinkedIn). The section stays hidden while empty.
 // Example: { quote: '...', name: 'Full Name', role: 'Head of SEO, Company' },
 const testimonials: { quote: string; name: string; role: string }[] = [];
-
 ---
 
 <!doctype html>
@@ -152,10 +146,7 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 
 <style>
 	.home {
-		width: auto;
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: clamp(2rem, 6vw, 5rem) clamp(1.25rem, 4vw, 3rem) 2rem;
+		padding: clamp(2rem, 6vw, 5rem) var(--gutter) 2rem;
 	}
 
 	/* ---------- Hero ---------- */
@@ -187,16 +178,14 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 		display: block;
 		max-width: 15ch;
 		margin-top: 0.5rem;
-		color: #5e5e5e;
+		color: var(--muted);
 		font-size: 0.8rem;
 		line-height: 1.4;
 	}
 
 	h1 {
 		margin: 0 0 1.75rem;
-		color: #1f1f1f;
 		font-size: clamp(3rem, 8.5vw, 6.75rem);
-		font-weight: 500;
 		letter-spacing: -0.045em;
 		line-height: 0.92;
 	}
@@ -204,7 +193,6 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 	.intro {
 		max-width: 34rem;
 		margin: 0 0 2.25rem;
-		color: #3a3a3a;
 		font-size: clamp(1.05rem, 1.6vw, 1.2rem);
 		line-height: 1.55;
 	}
@@ -215,7 +203,7 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 		margin: 0;
 		aspect-ratio: 4 / 5;
 		overflow: hidden;
-		background: #e3e3e0;
+		background: var(--surface);
 		border-radius: 4px;
 	}
 
@@ -233,62 +221,12 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 		filter: grayscale(1);
 	}
 
-	/* ---------- Buttons and links ---------- */
-	.actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
-	}
-
-	.btn {
-		display: inline-flex;
-		align-items: center;
-		padding: 0.8rem 1.4rem;
-		border: 1px solid #1f1f1f;
-		border-radius: 999px;
-		color: #1f1f1f;
-		font-size: 0.95rem;
-		line-height: 1;
-		text-decoration: none;
-		transition:
-			background-color 0.15s ease,
-			border-color 0.15s ease,
-			color 0.15s ease;
-	}
-
-	.btn:hover {
-		background: #1f1f1f;
-		color: #f2f2f0;
-	}
-
-	.btn-primary {
-		background: #1f1f1f;
-		color: #f2f2f0;
-	}
-
-	/* Classic hyperlink blue: a quiet nod to link building */
-	.btn-primary:hover {
-		background: #1f3fbf;
-		border-color: #1f3fbf;
-	}
-
+	/* ---------- Links ---------- */
 	.text-link {
 		display: inline-block;
 		margin-top: 1.75rem;
-		color: #1f1f1f;
 		font-size: 0.95rem;
-		text-decoration: underline;
 		text-underline-offset: 0.25em;
-	}
-
-	.text-link:hover {
-		color: #1f3fbf;
-	}
-
-	.btn:focus-visible,
-	.text-link:focus-visible {
-		outline: 2px solid #1f3fbf;
-		outline-offset: 3px;
 	}
 
 	/* ---------- Sections ---------- */
@@ -298,15 +236,13 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 		gap: clamp(1.5rem, 4vw, 4rem);
 		margin-top: clamp(5rem, 11vw, 8.5rem);
 		padding-top: 1.75rem;
-		border-top: 1px solid #d4d4d0;
+		border-top: 1px solid var(--rule);
 	}
 
 	.section h2,
 	.contact h2 {
 		margin: 0;
-		color: #1f1f1f;
 		font-size: clamp(1.6rem, 2.6vw, 2.1rem);
-		font-weight: 500;
 		letter-spacing: -0.025em;
 		line-height: 1.1;
 	}
@@ -355,7 +291,7 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 
 	.cert-meta {
 		display: block;
-		color: #5e5e5e;
+		color: var(--muted);
 		font-size: 0.85rem;
 	}
 
@@ -384,7 +320,7 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 
 	.quote-role {
 		display: block;
-		color: #5e5e5e;
+		color: var(--muted);
 		font-size: 0.85rem;
 	}
 
@@ -392,7 +328,7 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 	.contact {
 		margin-top: clamp(5rem, 11vw, 8.5rem);
 		padding: clamp(2.5rem, 6vw, 4.5rem) 0;
-		border-top: 1px solid #d4d4d0;
+		border-top: 1px solid var(--rule);
 	}
 
 	.contact h2 {
@@ -404,7 +340,6 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 	.contact p {
 		max-width: 34rem;
 		margin: 0 0 2rem;
-		color: #3a3a3a;
 		font-size: 1.05rem;
 		line-height: 1.55;
 	}
@@ -420,12 +355,6 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 		.portrait {
 			max-width: 420px;
 			aspect-ratio: 1 / 1;
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.btn {
-			transition: none;
 		}
 	}
 </style>
