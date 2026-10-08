@@ -31,7 +31,7 @@ const canonicalURL = new URL(path, site);
 const imageURL = new URL(image, site);
 
 // Google Search Console: paste only the code from content="..." between the quotes
-const googleVerification = '';
+const googleVerification = '3fV4GH4Urk2x1QbUafsUUqzSzxA3oyUl7zXSgfxMmOE';
 
 // Site-wide schema graph: who you are, what the site is, and what this page is
 const siteGraph = {
@@ -89,7 +89,7 @@ const siteGraph = {
 <link rel="canonical" href={canonicalURL} />
 {noindex && <meta name="robots" content="noindex, follow" />}
 <meta name="author" content="Ana Carolina Gomes" />
-<meta name="theme-color" content="#f2f2f0" />
+<meta name="theme-color" content="#efefef" />
 <meta name="generator" content={Astro.generator} />
 {googleVerification && <meta name="google-site-verification" content={googleVerification} />}
 
