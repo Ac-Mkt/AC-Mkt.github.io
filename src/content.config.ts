@@ -17,6 +17,10 @@ const blog = defineCollection({
 			heroImageAlt: z.string().optional(),
 			heroImageCredit: z.string().optional(),
 			heroImageCreditUrl: z.string().optional(),
+			// Shown in "Latest notes" on the homepage
+			category: z.string().optional(),
+			// Thumbnail graphic in "Latest notes": an original inline SVG, not a photo
+			thumb: z.enum(['chart', 'link', 'sparkle']).optional(),
 		}),
 });
 

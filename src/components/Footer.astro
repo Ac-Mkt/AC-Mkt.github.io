@@ -44,4 +44,11 @@ const year = new Date().getFullYear();
 		color: var(--link);
 		text-decoration: underline;
 	}
+
+	/* Mobile: leave room for the floating menu button (60px + 28px offset + home bar) */
+	@media (max-width: 720px) {
+		.site-footer {
+			padding-bottom: calc(124px + env(safe-area-inset-bottom));
+		}
+	}
 </style>

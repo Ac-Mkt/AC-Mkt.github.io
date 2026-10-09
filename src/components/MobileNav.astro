@@ -1,0 +1,291 @@
+---
+// Mobile navigation (below 720px): a floating button that opens a stack of pill links.
+// The links are rendered here at build time and only hidden while closed, so they stay
+// crawlable. Desktop uses the regular links in Header.astro.
+import { NAV_LINKS } from '../consts';
+import { isActive } from '../utils/nav';
+
+// Order of the pills, top to bottom. "Contact" becomes the dark "Get in touch" pill.
+const ORDER = ['/case-studies/', '/blog/', '/about/', '/skills/'];
+const links = ORDER.map((href) => NAV_LINKS.find((link) => link.href === href)!).map((link) => ({
+	href: link.href,
+	label: link.short ?? link.label,
+	current: isActive(Astro.url.pathname, link.href),
+}));
+const contactCurrent = isActive(Astro.url.pathname, '/contact/');
+---
+
+<div class="mnav" data-mnav data-open="false">
+	<div class="overlay" data-mnav-overlay></div>
+
+	<nav id="mobile-nav" class="panel" aria-label="Main">
+		<ul>
+			{
+				links.map((link, i) => (
+					<li style={`--i: ${i}`}>
+						<a class="pill" href={link.href} aria-current={link.current ? 'page' : undefined}>
+							{link.label}
+						</a>
+					</li>
+				))
+			}
+			<li style={`--i: ${links.length}`}>
+				<a class="pill pill-cta" href="/contact/" aria-current={contactCurrent ? 'page' : undefined}>
+					Get in touch
+					<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+						<path d="M5 12h14M13 6l6 6-6 6" />
+					</svg>
+				</a>
+			</li>
+		</ul>
+	</nav>
+
+	<button
+		class="fab"
+		type="button"
+		aria-label="Open menu"
+		aria-expanded="false"
+		aria-controls="mobile-nav"
+		data-mnav-toggle
+	>
+		<svg class="icon-menu" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+			<path d="M4 8h16M4 16h16" />
+		</svg>
+		<svg class="icon-close" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+			<path d="M6 6l12 12M18 6L6 18" />
+		</svg>
+	</button>
+</div>
+
+<script>
+	const root = document.querySelector<HTMLElement>('[data-mnav]');
+	const toggle = root?.querySelector<HTMLButtonElement>('[data-mnav-toggle]');
+	const overlay = root?.querySelector<HTMLElement>('[data-mnav-overlay]');
+	const links = Array.from(root?.querySelectorAll<HTMLAnchorElement>('.panel a') ?? []);
+
+	if (root && toggle && overlay && links.length > 0) {
+		const isOpen = () => root.dataset.open === 'true';
+
+		const open = () => {
+			root.dataset.open = 'true';
+			toggle.setAttribute('aria-expanded', 'true');
+			toggle.setAttribute('aria-label', 'Close menu');
+			document.documentElement.style.overflow = 'hidden'; // lock page scroll
+			links[0].focus(); // focus() recalculates styles, so the panel is already visible
+		};
+
+		const close = (returnFocus = true) => {
+			root.dataset.open = 'false';
+			toggle.setAttribute('aria-expanded', 'false');
+			toggle.setAttribute('aria-label', 'Open menu');
+			document.documentElement.style.overflow = '';
+			if (returnFocus) toggle.focus();
+		};
+
+		toggle.addEventListener('click', () => (isOpen() ? close() : open()));
+		overlay.addEventListener('click', () => close());
+		links.forEach((link) => link.addEventListener('click', () => close(false)));
+
+		document.addEventListener('keydown', (event) => {
+			if (!isOpen()) return;
+			if (event.key === 'Escape') {
+				close();
+				return;
+			}
+			// Trap focus: the links, then the button, then back to the first link
+			if (event.key === 'Tab') {
+				const items: HTMLElement[] = [...links, toggle];
+				const first = items[0];
+				const last = items[items.length - 1];
+				if (event.shiftKey && document.activeElement === first) {
+					event.preventDefault();
+					last.focus();
+				} else if (!event.shiftKey && document.activeElement === last) {
+					event.preventDefault();
+					first.focus();
+				}
+			}
+		});
+
+		// Close if the window grows past the mobile breakpoint while open
+		window.matchMedia('(min-width: 721px)').addEventListener('change', (event) => {
+			if (event.matches && isOpen()) close(false);
+		});
+	}
+</script>
+
+<style>
+	/* Desktop: hidden (Header.astro shows the regular links) */
+	.mnav {
+		display: none;
+	}
+
+	@media (max-width: 720px) {
+		.mnav {
+			display: block;
+		}
+	}
+
+	/* Soft dark dim behind the menu */
+	.overlay {
+		position: fixed;
+		inset: 0;
+		z-index: 50;
+		background: rgba(22, 22, 22, 0.32);
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity 0.18s ease,
+			visibility 0s linear 0.18s;
+	}
+
+	/* Pill stack, right-aligned above the button */
+	.panel {
+		position: fixed;
+		right: 20px;
+		bottom: calc(104px + env(safe-area-inset-bottom));
+		z-index: 51;
+		visibility: hidden;
+		transition: visibility 0s linear 0.18s;
+	}
+
+	.panel ul {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 10px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	/* Fade and slide up, staggered: 5 pills x 25ms + 100ms = ~200ms in total */
+	.panel li {
+		opacity: 0;
+		transform: translateY(8px);
+		transition:
+			opacity 0.1s ease,
+			transform 0.1s ease;
+		transition-delay: calc(var(--i) * 25ms);
+	}
+
+	.pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		height: 52px;
+		padding: 0 22px;
+		border-radius: 999px;
+		background: #fafaf8;
+		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+		color: #161616;
+		font-size: 19px;
+		font-weight: 500;
+		line-height: 1;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	.pill[aria-current='page'] {
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.25em;
+	}
+
+	.pill-cta {
+		background: #161616;
+		color: #fff;
+		font-size: 17px;
+		font-weight: 600;
+	}
+
+	.pill:hover {
+		color: #161616;
+	}
+
+	.pill-cta:hover {
+		color: #fff;
+	}
+
+	.pill svg {
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	/* Floating button */
+	.fab {
+		position: fixed;
+		right: 20px;
+		bottom: calc(28px + env(safe-area-inset-bottom));
+		z-index: 52;
+		display: grid;
+		place-items: center;
+		width: 60px;
+		height: 60px;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background: #161616;
+		box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+		color: #fff;
+		cursor: pointer;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	.fab:active {
+		transform: scale(0.96);
+	}
+
+	.fab svg {
+		grid-area: 1 / 1;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+	}
+
+	.icon-close {
+		display: none;
+	}
+
+	/* Open state */
+	.mnav[data-open='true'] .overlay {
+		opacity: 1;
+		visibility: visible;
+		transition: opacity 0.18s ease;
+	}
+
+	.mnav[data-open='true'] .panel {
+		visibility: visible;
+		transition: none;
+	}
+
+	.mnav[data-open='true'] .panel li {
+		opacity: 1;
+		transform: none;
+	}
+
+	.mnav[data-open='true'] .icon-menu {
+		display: none;
+	}
+
+	.mnav[data-open='true'] .icon-close {
+		display: block;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.overlay,
+		.panel,
+		.panel li,
+		.fab {
+			transition: none;
+		}
+
+		.fab:active {
+			transform: none;
+		}
+	}
+</style>

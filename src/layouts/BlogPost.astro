@@ -5,6 +5,7 @@ import { Image } from 'astro:assets';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { formatDate } from '../utils/date';
 
 interface Props {
 	title: string;
@@ -31,8 +32,7 @@ const {
 } = Astro.props;
 
 const toc = headings.filter((h) => h.depth === 2);
-const format = (date: Date) =>
-	date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const format = (date: Date) => formatDate(date, 'long');
 
 const siteUrl = (Astro.site ?? new URL('https://ac-mkt.github.io')).href.replace(/\/$/, '');
 const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
@@ -47,13 +47,14 @@ const postSchema = {
 		{
 			'@type': 'BlogPosting',
 			'@id': `${pageUrl}#article`,
+			url: pageUrl,
 			headline: title,
 			description,
 			image: imageUrl,
 			datePublished: pubDate.toISOString(),
 			dateModified: (updatedDate ?? pubDate).toISOString(),
 			mainEntityOfPage: { '@id': `${pageUrl}#webpage` },
-			author: { ...person, url: `${siteUrl}/about/` },
+			author: { ...person, url: `${siteUrl}/about/`, sameAs: ['https://www.linkedin.com/in/anacpsg'] },
 			publisher: person,
 			inLanguage: 'en',
 		},

@@ -1,19 +1,9 @@
 ---
-// Main navigation. Add, remove or reorder pages here.
-const links = [
-	{ href: '/about/', label: 'About' },
-	{ href: '/case-studies/', label: 'Case Studies' },
-	{ href: '/skills/', label: 'Skills' },
-	{ href: '/blog/', label: 'Blog' },
-	{ href: '/contact/', label: 'Contact' },
-];
-
-// Marks the current page in the menu (also works for /blog/post-name)
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isActive = (href: string) => {
-	const target = href.replace(/\/$/, '');
-	return path === target || path.startsWith(target + '/');
-};
+// Site header. Desktop shows the links inline; below 720px only the logo stays here and
+// MobileNav takes over. Add, remove or reorder pages in NAV_LINKS (src/consts.ts).
+import MobileNav from './MobileNav.astro';
+import { NAV_LINKS as links } from '../consts';
+import { isActive } from '../utils/nav';
 ---
 
 <header class="site-header">
@@ -27,15 +17,11 @@ const isActive = (href: string) => {
 			<span class="brand-name">ACmkt</span>
 		</a>
 
-		<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links">
-			Menu
-		</button>
-
-		<ul class="links" id="nav-links">
+		<ul class="links">
 			{
 				links.map((link) => (
 					<li>
-						<a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>
+						<a href={link.href} aria-current={isActive(Astro.url.pathname, link.href) ? 'page' : undefined}>
 							{link.label}
 						</a>
 					</li>
@@ -45,16 +31,7 @@ const isActive = (href: string) => {
 	</nav>
 </header>
 
-<script>
-	const toggle = document.querySelector('.menu-toggle');
-	const links = document.getElementById('nav-links');
-
-	toggle?.addEventListener('click', () => {
-		const open = toggle.getAttribute('aria-expanded') === 'true';
-		toggle.setAttribute('aria-expanded', String(!open));
-		links?.classList.toggle('is-open', !open);
-	});
-</script>
+<MobileNav />
 
 <style>
 	.site-header {
@@ -74,6 +51,7 @@ const isActive = (href: string) => {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.55rem;
+		min-height: 2.75rem;
 		color: var(--ink);
 		text-decoration: none;
 	}
@@ -112,48 +90,16 @@ const isActive = (href: string) => {
 	}
 
 	.brand:focus-visible,
-	.links a:focus-visible,
-	.menu-toggle:focus-visible {
+	.links a:focus-visible {
 		outline: 2px solid var(--ink);
 		outline-offset: 4px;
 		border-radius: 2px;
 	}
 
-	.menu-toggle {
-		display: none;
-	}
-
-	/* Mobile: links collapse behind a "Menu" button */
+	/* Mobile: the floating menu in MobileNav.astro replaces these links */
 	@media (max-width: 720px) {
-		.menu-toggle {
-			display: inline-block;
-			min-height: 2.75rem;
-			margin-left: auto;
-			padding: 0.4rem 1.1rem;
-			background: none;
-			border: 1px solid var(--ink);
-			border-radius: 999px;
-			color: var(--ink);
-			font: inherit;
-			font-size: 0.85rem;
-			cursor: pointer;
-		}
-
 		.links {
 			display: none;
-			width: 100%;
-			flex-direction: column;
-			gap: 0.25rem;
-			padding-top: 1.25rem;
-		}
-
-		.links.is-open {
-			display: flex;
-		}
-
-		.links a {
-			padding: 0.6rem 0;
-			font-size: 1.05rem;
 		}
 	}
 </style>

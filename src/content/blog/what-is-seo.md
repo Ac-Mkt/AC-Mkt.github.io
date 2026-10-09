@@ -6,6 +6,8 @@ heroImage: '../../assets/seo-traffic-report-analysis.jpg'
 heroImageAlt: 'Two people reviewing a printed bar chart of website traffic on a wooden desk, next to a laptop and a notebook'
 heroImageCredit: 'Tima Miroshnichenko on Pexels'
 heroImageCreditUrl: 'https://www.pexels.com/pt-br/foto/preto-e-branco-p-b-homem-maos-5686046/'
+category: 'SEO basics'
+thumb: 'chart'
 ---
 
 SEO (search engine optimization) is the practice of improving a website so it shows up in the free, unpaid results of search engines like Google and Bing, and today in AI answers from tools like ChatGPT, Perplexity and Google's AI Overviews. It works on three fronts: the content on your pages (on-page SEO), the technical health of your site (technical SEO), and the trust your site earns from other websites, such as links and mentions (off-page SEO).

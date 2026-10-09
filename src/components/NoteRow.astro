@@ -1,0 +1,138 @@
+---
+// One row in "Latest notes": a thumbnail graphic, then category · date, title and read time.
+// The whole row is a single link to the post.
+import { formatDate, isoDate } from '../utils/date';
+
+interface Props {
+	href: string;
+	title: string;
+	date: Date;
+	minutes: number;
+	category?: string;
+	thumb?: 'chart' | 'link' | 'sparkle';
+}
+
+const { href, title, date, minutes, category, thumb = 'chart' } = Astro.props;
+---
+
+<a class="row" href={href}>
+	<span class:list={['thumb', `thumb-${thumb}`]}>
+		{
+			thumb === 'chart' && (
+				<svg viewBox="0 0 88 88" aria-hidden="true">
+					<rect x="22" y="50" width="8" height="14" rx="1.5" fill="#6b6b68" />
+					<rect x="34" y="42" width="8" height="22" rx="1.5" fill="#9a9a96" />
+					<rect x="46" y="33" width="8" height="31" rx="1.5" fill="#cfcfcb" />
+					<rect x="58" y="24" width="8" height="40" rx="1.5" fill="#ffffff" />
+				</svg>
+			)
+		}
+		{
+			thumb === 'link' && (
+				<svg viewBox="0 0 24 24" aria-hidden="true">
+					<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+					<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+				</svg>
+			)
+		}
+		{
+			thumb === 'sparkle' && (
+				<svg viewBox="0 0 24 24" aria-hidden="true">
+					<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z" />
+					<path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z" />
+				</svg>
+			)
+		}
+	</span>
+
+	<span class="text">
+		<span class="meta">
+			{category && <>{category} · </>}
+			<time datetime={isoDate(date)}>{formatDate(date)}</time>
+		</span>
+		<span class="title">{title}</span>
+		<span class="read">{minutes} min read</span>
+	</span>
+</a>
+
+<style>
+	.row {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		padding: 12px;
+		border-radius: 16px;
+		background: #fafaf8;
+		color: #161616;
+		text-decoration: none;
+	}
+
+	.thumb {
+		display: grid;
+		place-items: center;
+		flex: none;
+		width: 88px;
+		height: 88px;
+		overflow: hidden;
+		border-radius: 12px;
+		background: #d9d8d3;
+	}
+
+	.thumb-chart {
+		background: #161616;
+	}
+
+	.thumb svg {
+		width: 100%;
+		height: 100%;
+	}
+
+	/* Line icons: smaller, stroked */
+	.thumb-link svg,
+	.thumb-sparkle svg {
+		width: 36px;
+		height: 36px;
+		fill: none;
+		stroke: #161616;
+		stroke-width: 1.6;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.text {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		min-width: 0;
+	}
+
+	.meta,
+	.read {
+		color: #4a4a48;
+		font-size: 12px;
+		line-height: 1.4;
+	}
+
+	.read {
+		font-size: 13px;
+	}
+
+	.title {
+		color: #161616;
+		font-size: 17px;
+		font-weight: 500;
+		line-height: 1.25;
+		overflow-wrap: break-word;
+	}
+
+	.row:hover .title {
+		color: var(--link);
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	.row:focus-visible {
+		outline: 2px solid var(--link);
+		outline-offset: 3px;
+	}
+</style>

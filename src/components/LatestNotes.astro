@@ -1,0 +1,71 @@
+---
+// "Latest notes" list for the homepage: the three most recent posts as compact rows,
+// then an "All posts" button. Shows only the posts that exist (no placeholders).
+import { getCollection } from 'astro:content';
+import NoteRow from './NoteRow.astro';
+import { readingTime } from '../utils/readingTime';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
+---
+
+<ul class="rows">
+	{
+		posts.map((post) => (
+			<li>
+				<NoteRow
+					href={`/blog/${post.id}/`}
+					title={post.data.title}
+					date={post.data.pubDate}
+					minutes={readingTime(post.body)}
+					category={post.data.category}
+					thumb={post.data.thumb}
+				/>
+			</li>
+		))
+	}
+</ul>
+
+<a class="all-posts" href="/blog/">All posts</a>
+
+<style>
+	.rows {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.all-posts {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 48px;
+		margin-top: 20px;
+		padding: 0 1.75rem;
+		border: 1px solid #161616;
+		border-radius: 999px;
+		color: #161616;
+		font-size: 15px;
+		font-weight: 600;
+		text-decoration: none;
+		transition:
+			background-color 0.15s ease,
+			color 0.15s ease;
+	}
+
+	.all-posts:hover {
+		background: #161616;
+		color: var(--paper);
+	}
+
+	/* Wider screens: a regular-width button, like the rest of the site */
+	@media (min-width: 601px) {
+		.all-posts {
+			display: inline-flex;
+		}
+	}
+</style>

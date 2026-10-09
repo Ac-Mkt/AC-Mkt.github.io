@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import { formatDate } from '../../utils/date';
 
 // Only published case studies get their own page
 export async function getStaticPaths() {
@@ -14,11 +15,7 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 const { title, description, result, type, tools, pubDate } = entry.data;
 
-const published = pubDate.toLocaleDateString('en-GB', {
-	day: 'numeric',
-	month: 'long',
-	year: 'numeric',
-});
+const published = formatDate(pubDate, 'long');
 
 // Article + breadcrumb schema. Author and publisher link to the Person in BaseHead.
 const siteUrl = (Astro.site ?? new URL('https://ac-mkt.github.io')).href.replace(/\/$/, '');
