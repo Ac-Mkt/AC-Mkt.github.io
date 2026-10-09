@@ -5,7 +5,7 @@ import Footer from '../components/Footer.astro';
 
 const title = 'Contact | Ana Carolina Gomes';
 const description =
-	'Get in touch with Ana Carolina Gomes, SEO and Digital PR specialist, by email or LinkedIn.';
+	'Get in touch with Ana Carolina Gomes, SEO specialist, by email or LinkedIn.';
 ---
 
 <!doctype html>
@@ -19,8 +19,8 @@ const description =
 			<header class="page-head">
 				<h1>Let's talk</h1>
 				<p>
-					I'm open to SEO, Digital PR and Growth roles, and to conversations about projects where
-					authority building, data and automation come together.
+					I'm open to SEO and brand roles, and to conversations about projects where search,
+					content and brand come together.
 				</p>
 			</header>
 
@@ -42,6 +42,10 @@ const description =
 					<dd>Portuguese and English</dd>
 				</div>
 			</dl>
+
+			<div class="actions">
+				<a class="btn" href="/Ana-Carolina-Gomes-CV.pdf" download>Download CV</a>
+			</div>
 		</main>
 		<Footer />
 	</body>
@@ -81,6 +85,10 @@ const description =
 	dd a {
 		text-decoration: underline;
 		text-decoration-thickness: 1px;
+	}
+
+	.actions {
+		margin-top: 2.25rem;
 	}
 
 	@media (max-width: 600px) {

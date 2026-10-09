@@ -16,9 +16,10 @@ export const GET: APIRoute = async ({ site }) => {
 	const lines = [
 		'# Ana Carolina Gomes (ACmkt)',
 		'',
-		'> Portfolio of Ana Carolina Gomes, an SEO and Digital PR specialist based in Belo Horizonte, Brazil. She works on link acquisition, media partnerships, on-page SEO, Generative Engine Optimization (GEO) and AI-assisted SEO workflows built with Claude Code and Python.',
+		'> Portfolio of Ana Carolina Gomes, an SEO specialist based in Belo Horizonte, Brazil. She works across content, on-page and off-page SEO, Digital PR, brand visibility in AI search (GEO) and AI-assisted SEO workflows built with Claude Code and Python.',
 		'',
 		'Key facts:',
+		'- Working in SEO since 2023: content and on-page SEO, then off-page SEO and Digital PR across international markets',
 		'- Secures 250 to 300 high-authority backlinks per quarter across international markets',
 		'- Reduced the average cost per link by 25% through outreach and negotiation',
 		'- Manages relationships with 20+ media and affiliate partners',
@@ -29,7 +30,7 @@ export const GET: APIRoute = async ({ site }) => {
 		'',
 		`- [About](${base}/about/): background, experience, education and languages`,
 		`- [Case studies](${base}/case-studies/): professional work, course projects and personal builds`,
-		`- [Skills](${base}/skills/): off-page SEO, Digital PR, SEO and GEO, AI and automation, tools and certifications`,
+		`- [Skills](${base}/skills/): SEO and GEO, authority and Digital PR, AI and automation, tools and certifications`,
 		`- [Contact](${base}/contact/): email and LinkedIn`,
 	];
 

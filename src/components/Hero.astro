@@ -5,11 +5,11 @@ interface Props {
 	eyebrow: string;
 	title: string;
 	subtitle: string;
-	stats: { value: string; label: string }[];
+	stats?: { value: string; label: string }[];
 	actions: { label: string; href: string; primary?: boolean; download?: boolean }[];
 }
 
-const { eyebrow, title, subtitle, stats, actions } = Astro.props;
+const { eyebrow, title, subtitle, stats = [], actions } = Astro.props;
 const hasMedia = Astro.slots.has('media');
 ---
 
@@ -33,16 +33,18 @@ const hasMedia = Astro.slots.has('media');
 			}
 		</div>
 
-		<ul class="proof">
-			{
-				stats.map((stat) => (
-					<li>
-						<span class="proof-value">{stat.value}</span>
-						<span class="proof-label">{stat.label}</span>
-					</li>
-				))
-			}
-		</ul>
+		{
+			stats.length > 0 && (
+				<ul class="proof">
+					{stats.map((stat) => (
+						<li>
+							<span class="proof-value">{stat.value}</span>
+							<span class="proof-label">{stat.label}</span>
+						</li>
+					))}
+				</ul>
+			)
+		}
 	</div>
 
 	{

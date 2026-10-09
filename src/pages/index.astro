@@ -9,21 +9,22 @@ import { Image } from 'astro:assets';
 import portrait from '../assets/ana-carolina-gomes-color.jpg';
 import { CERTIFICATIONS as certifications } from '../consts';
 
-const title = 'Ana Carolina Gomes — Off-page SEO & Digital PR';
+const title = 'Ana Carolina Gomes — SEO and brand visibility';
 const description =
-	'Link building and Digital PR for regulated, high-competition industries like betting, backed by data and AI workflows for faster, consistent outreach.';
-
-// Hero numbers. Only real, verifiable results.
-const stats = [
-	{ value: '250–300', label: 'links per quarter' },
-	{ value: '20+', label: 'media and affiliate partners' },
-	{ value: '25%', label: 'lower cost per link' },
-];
+	'How brands get found, trusted and cited in search: projects and notes from practice by Ana Carolina Gomes, SEO specialist in Belo Horizonte, Brazil.';
 
 // Featured case studies: the first three by "order" in src/content/case-studies
 const featured = (await getCollection('caseStudies'))
 	.sort((a, b) => a.data.order - b.data.order)
 	.slice(0, 3);
+
+// Latest notes: the three most recent blog posts
+const latestPosts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
+
+const formatDate = (date: Date) =>
+	date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
 const tools = [
 	'Ahrefs',
@@ -49,13 +50,12 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 		<Header />
 		<main class="home">
 			<Hero
-				eyebrow="Ana Carolina Gomes · Off-page SEO & Digital PR · Belo Horizonte, Brazil"
-				title="I build authority in markets where links are hardest to earn."
-				subtitle="Link building and Digital PR for regulated, high-competition industries like betting, where outreach is expensive, partners are selective and every link has to hold up. I pair that with data and AI workflows that make the process faster and more consistent."
-				stats={stats}
+				eyebrow="Ana Carolina Gomes · SEO and brand visibility · Belo Horizonte, Brazil"
+				title="How brands get found, trusted and cited in search."
+				subtitle="In almost four years of SEO, I’ve worked across content, on-page and off-page, mostly in international, high-competition markets. Links, mentions and clear content shape not only rankings but which brands AI tools choose to cite. This site is where I write about that work and what I learn from it."
 				actions={[
-					{ label: 'See case studies', href: '/case-studies/', primary: true },
-					{ label: 'Download CV', href: '/Ana-Carolina-Gomes-CV.pdf', download: true },
+					{ label: 'Read the notes', href: '/blog/', primary: true },
+					{ label: 'See my work', href: '/case-studies/' },
 				]}
 			>
 				<figure class="portrait" slot="media">
@@ -72,16 +72,60 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 
 			<!-- Selected work -->
 			<section class="section" aria-labelledby="work-title">
-				<h2 id="work-title">Selected work</h2>
+				<div>
+					<h2 id="work-title">Selected work</h2>
+					<p class="section-intro">
+						Projects from my day-to-day work and my studies: the problem, what I did and what came
+						out of it.
+					</p>
+				</div>
 				<div>
 					<CaseList cases={featured} />
 					<a class="text-link" href="/case-studies/">All case studies</a>
 				</div>
 			</section>
 
-			<!-- Tools and certifications -->
+			<!-- Latest notes -->
+			<section class="section" aria-labelledby="notes-title">
+				<div>
+					<h2 id="notes-title">Latest notes</h2>
+					<p class="section-intro">Practical writing on SEO, GEO, link building and AI workflows.</p>
+				</div>
+				<div>
+					<ul class="notes">
+						{
+							latestPosts.map((post) => (
+								<li>
+									<a class:list={['note', { 'no-thumb': !post.data.heroImage }]} href={`/blog/${post.id}/`}>
+										{post.data.heroImage && (
+											<Image
+												class="note-thumb"
+												src={post.data.heroImage}
+												alt=""
+												widths={[320, 480]}
+												sizes="(max-width: 600px) 100vw, 200px"
+											/>
+										)}
+										<span class="note-main">
+											<time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+											<span class="note-title">{post.data.title}</span>
+											<span class="note-desc">{post.data.description}</span>
+										</span>
+									</a>
+								</li>
+							))
+						}
+					</ul>
+					<a class="text-link" href="/blog/">All posts</a>
+				</div>
+			</section>
+
+			<!-- What I work with -->
 			<section class="section" aria-labelledby="tools-title">
-				<h2 id="tools-title">Tools and certifications</h2>
+				<div>
+					<h2 id="tools-title">What I work with</h2>
+					<p class="section-intro">The tools I use day to day, and the courses that shaped how I work.</p>
+				</div>
 				<div class="tools-grid">
 					<ul class="tools">
 						{tools.map((tool) => <li>{tool}</li>)}
@@ -123,8 +167,11 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 
 			<!-- Contact -->
 			<section class="contact" aria-labelledby="contact-title">
-				<h2 id="contact-title">Looking for an SEO or Digital PR specialist?</h2>
-				<p>I'm open to new roles and projects. The fastest way to reach me is by email or LinkedIn.</p>
+				<h2 id="contact-title">Get in touch</h2>
+				<p>
+					Questions about something I wrote, a project in SEO or brand visibility, or just want to
+					compare notes? Email or LinkedIn is the best way to reach me.
+				</p>
 				<div class="actions">
 					<a class="btn btn-primary" href="mailto:contato.carolpss@gmail.com">Email me</a>
 					<a class="btn" href="https://www.linkedin.com/in/anacpsg" rel="me">LinkedIn</a>
@@ -183,7 +230,90 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 		line-height: 1.1;
 	}
 
-	/* Tools and certifications */
+	.section-intro {
+		max-width: 20rem;
+		margin: 0.9rem 0 0;
+		color: var(--muted);
+		font-size: 0.95rem;
+		line-height: 1.5;
+	}
+
+	/* Latest notes */
+	.notes {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.notes li + li {
+		border-top: 1px solid var(--rule);
+	}
+
+	.note {
+		display: grid;
+		grid-template-columns: 12.5rem minmax(0, 1fr);
+		gap: 1rem 2rem;
+		align-items: start;
+		padding: 1.6rem 0;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.note.no-thumb {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.notes li:first-child .note {
+		padding-top: 0;
+	}
+
+	.note :global(.note-thumb) {
+		width: 100%;
+		height: auto;
+		aspect-ratio: 3 / 2;
+		object-fit: cover;
+		border-radius: 4px;
+		background: var(--surface);
+	}
+
+	.note time {
+		display: block;
+		margin-bottom: 0.35rem;
+		color: var(--muted);
+		font-size: 0.8rem;
+	}
+
+	.note-title {
+		display: block;
+		margin-bottom: 0.5rem;
+		color: var(--ink);
+		font-size: 1.2rem;
+		font-weight: 500;
+		letter-spacing: -0.01em;
+		line-height: 1.3;
+	}
+
+	.note:hover .note-title {
+		color: var(--link);
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	.note-desc {
+		display: block;
+		max-width: 38rem;
+		color: var(--muted);
+		font-size: 0.95rem;
+		line-height: 1.55;
+	}
+
+	@media (max-width: 600px) {
+		.note {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	/* What I work with */
 	.tools-grid {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

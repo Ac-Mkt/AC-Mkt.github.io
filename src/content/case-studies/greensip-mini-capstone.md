@@ -1,6 +1,6 @@
 ---
-title: 'GreenSip: an answer-ready article for a YMYL topic'
-description: 'Keyword strategy, AI-assisted content and schema markup for "green tea for weight loss", built for a fictional wellness brand.'
+title: 'GreenSip: an answer-ready article on a YMYL topic'
+description: 'Keyword strategy, AI-assisted writing and schema markup for "green tea for weight loss", built for a fictional wellness brand to practice content that search engines and AI tools can trust.'
 result: '6-keyword cluster with 66,500+ monthly US searches; schema validated with zero errors'
 type: 'Course project'
 pubDate: 2026-10-07
