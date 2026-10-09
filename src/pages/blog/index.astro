@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
@@ -13,7 +14,7 @@ const format = (date: Date) =>
 
 const title = 'Blog | Ana Carolina Gomes';
 const description =
-	'Notes on SEO, GEO, link building and AI-assisted workflows by Ana Carolina Gomes, written from hands-on work.';
+	'Practical guides to SEO, link building and Digital PR by Ana Carolina Gomes, with real examples from her work in competitive markets.';
 ---
 
 <!doctype html>
@@ -26,14 +27,26 @@ const description =
 		<main>
 			<header class="page-head">
 				<h1>Blog</h1>
-				<p>Notes on SEO, GEO, link building and AI workflows, written from hands-on work.</p>
+				<p>
+					What I've learned building links and authority in some of the toughest markets online,
+					explained for anyone who wants to learn SEO.
+				</p>
 			</header>
 
 			<ul class="posts">
 				{
 					posts.map((post) => (
 						<li>
-							<a class="post-item" href={`/blog/${post.id}/`}>
+							<a class:list={['post-item', { 'no-thumb': !post.data.heroImage }]} href={`/blog/${post.id}/`}>
+								{post.data.heroImage && (
+									<Image
+										class="post-thumb"
+										src={post.data.heroImage}
+										alt=""
+										widths={[320, 480, 640]}
+										sizes="(max-width: 600px) 100vw, 240px"
+									/>
+								)}
 								<time datetime={post.data.pubDate.toISOString()}>{format(post.data.pubDate)}</time>
 								<span class="post-main">
 									<span class="post-title">{post.data.title}</span>
@@ -66,17 +79,34 @@ const description =
 
 	.post-item {
 		display: grid;
-		grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
-		gap: 0.5rem 2.5rem;
+		grid-template-areas:
+			'thumb date'
+			'thumb main';
+		grid-template-columns: 15rem minmax(0, 1fr);
+		grid-template-rows: auto 1fr;
+		gap: 0.25rem 2.5rem;
+		align-items: start;
 		padding: 1.6rem 0;
 		color: inherit;
 		text-decoration: none;
 	}
 
+	.post-item.no-thumb {
+		grid-template-areas:
+			'date'
+			'main';
+		grid-template-columns: minmax(0, 1fr);
+	}
+
 	time {
+		grid-area: date;
 		color: var(--muted);
 		font-size: 0.85rem;
 		line-height: 1.9;
+	}
+
+	.post-main {
+		grid-area: main;
 	}
 
 	.post-title {
@@ -103,9 +133,35 @@ const description =
 		line-height: 1.55;
 	}
 
+	.post-item :global(.post-thumb) {
+		grid-area: thumb;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 3 / 2;
+		object-fit: cover;
+		border-radius: 4px;
+		background: var(--surface);
+	}
+
+	@media (max-width: 860px) {
+		.post-item {
+			grid-template-columns: 11rem minmax(0, 1fr);
+			column-gap: 1.5rem;
+		}
+	}
+
 	@media (max-width: 600px) {
 		.post-item {
+			grid-template-areas:
+				'thumb'
+				'date'
+				'main';
 			grid-template-columns: 1fr;
+			grid-template-rows: auto;
+		}
+
+		.post-item :global(.post-thumb) {
+			margin-bottom: 0.75rem;
 		}
 	}
 </style>
