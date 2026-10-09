@@ -50,7 +50,7 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 		<Header />
 		<main class="home">
 			<Hero
-				eyebrow="Ana Carolina Gomes · SEO and brand visibility · Belo Horizonte, Brazil"
+				eyebrow={['Ana Carolina Gomes', 'SEO and brand visibility', 'Belo Horizonte, Brazil']}
 				title="How brands get found, trusted and cited in search."
 				subtitle="In almost four years of SEO, I’ve worked across content, on-page and off-page, mostly in international, high-competition markets. Links, mentions and clear content shape not only rankings but which brands AI tools choose to cite. This site is where I write about that work and what I learn from it."
 				actions={[
@@ -68,6 +68,15 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 						fetchpriority="high"
 					/>
 				</figure>
+				<Image
+					slot="avatar"
+					src={portrait}
+					alt=""
+					width={72}
+					height={72}
+					densities={[1, 2, 3]}
+					loading="eager"
+				/>
 			</Hero>
 
 			<!-- Selected work -->
@@ -205,9 +214,11 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 	}
 
 	/* ---------- Links ---------- */
+	/* The padding gives a ~44px tap area; the margin offsets it so the layout doesn't move */
 	.text-link {
 		display: inline-block;
-		margin-top: 1.75rem;
+		margin-top: 1.05rem;
+		padding: 0.7rem 0;
 		font-size: 0.95rem;
 		text-underline-offset: 0.25em;
 	}
@@ -420,6 +431,22 @@ const testimonials: { quote: string; name: string; role: string }[] = [];
 		.portrait {
 			max-width: 420px;
 			aspect-ratio: 1 / 1;
+		}
+	}
+
+	/* Phones: tighter vertical rhythm between sections */
+	@media (max-width: 600px) {
+		.section,
+		.contact {
+			margin-top: 3.25rem;
+		}
+
+		.section {
+			gap: 1.25rem;
+		}
+
+		.text-link {
+			margin-top: 0.5rem;
 		}
 	}
 </style>

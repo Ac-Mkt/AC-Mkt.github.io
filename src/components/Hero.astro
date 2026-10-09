@@ -1,8 +1,9 @@
 ---
 // Homepage hero: eyebrow, H1, subheadline, CTAs and a proof strip.
-// Pass an image (e.g. a portrait) through the "media" slot to show it beside the text.
+// Pass an image (e.g. a portrait) through the "media" slot to show it beside the text, and a
+// small version through the "avatar" slot: on phones the avatar replaces the large image.
 interface Props {
-	eyebrow: string;
+	eyebrow: string[]; // parts are joined with " · " and only wrap between parts
 	title: string;
 	subtitle: string;
 	stats?: { value: string; label: string }[];
@@ -11,11 +12,35 @@ interface Props {
 
 const { eyebrow, title, subtitle, stats = [], actions } = Astro.props;
 const hasMedia = Astro.slots.has('media');
+const hasAvatar = Astro.slots.has('avatar');
 ---
 
-<section class:list={['hero', { 'has-media': hasMedia }]} aria-labelledby="hero-title">
+<section
+	class:list={['hero', { 'has-media': hasMedia, 'has-avatar': hasAvatar }]}
+	aria-labelledby="hero-title"
+>
 	<div class="hero-text">
-		<p class="eyebrow">{eyebrow}</p>
+		<div class="intro-row">
+			{
+				hasAvatar && (
+					<div class="hero-avatar">
+						<slot name="avatar" />
+					</div>
+				)
+			}
+			<p class="eyebrow">
+				{
+					eyebrow.map((part, i) => (
+						<>
+							<span class="eyebrow-part">
+								{part}
+								{i < eyebrow.length - 1 && ' ·'}
+							</span>{' '}
+						</>
+					))
+				}
+			</p>
+		</div>
 		<h1 id="hero-title">{title}</h1>
 		<p class="subtitle">{subtitle}</p>
 
@@ -67,12 +92,41 @@ const hasMedia = Astro.slots.has('media');
 		grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
 	}
 
-	.eyebrow {
+	.intro-row {
+		display: flex;
+		align-items: center;
+		gap: 0.9rem;
 		margin: 0 0 1.25rem;
+	}
+
+	.eyebrow {
+		margin: 0;
 		color: var(--muted);
 		font-size: 0.85rem;
 		letter-spacing: 0.01em;
 		line-height: 1.5;
+	}
+
+	/* Wrap only between parts, so "Belo Horizonte, Brazil" stays together */
+	.eyebrow-part {
+		white-space: nowrap;
+	}
+
+	/* Avatar: phones only (the large image in the "media" slot covers wider screens) */
+	.hero-avatar {
+		display: none;
+		flex: none;
+		width: 4.5rem;
+		height: 4.5rem;
+		overflow: hidden;
+		border-radius: 50%;
+		background: var(--surface);
+	}
+
+	.hero-avatar :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 	}
 
 	h1 {
@@ -122,6 +176,16 @@ const hasMedia = Astro.slots.has('media');
 	@media (max-width: 860px) {
 		.hero.has-media {
 			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.hero.has-avatar .hero-avatar {
+			display: block;
+		}
+
+		.hero.has-avatar .hero-media {
+			display: none;
 		}
 	}
 </style>
