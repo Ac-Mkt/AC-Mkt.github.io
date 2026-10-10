@@ -1,16 +1,14 @@
 // Generates /llms.txt: a plain-text summary of the site for AI assistants and answer engines.
 // It updates itself whenever case studies or blog posts are published.
 import type { APIRoute } from 'astro';
-import { getCollection } from 'astro:content';
 import { getCaseStudies, hasPage } from '../utils/cases';
+import { getPosts } from '../utils/posts';
 
 export const GET: APIRoute = async ({ site }) => {
 	const base = (site ?? new URL('https://ac-mkt.github.io')).href.replace(/\/$/, '');
 
 	const cases = (await getCaseStudies()).filter(hasPage);
-	const posts = (await getCollection('blog')).sort(
-		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-	);
+	const posts = await getPosts();
 
 	const lines = [
 		'# Ana Carolina Gomes (ACmkt)',

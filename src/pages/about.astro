@@ -2,6 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { absolute, ids, personNode } from '../utils/schema';
 
 const title = 'About | Ana Carolina Gomes';
 const description =
@@ -16,21 +17,25 @@ const experience = [
 
 const languages = ['Portuguese (native)', 'English (C1)', 'Spanish (A1)'];
 
-// ProfilePage schema: marks this as the main page about you.
-// The full Person details live in BaseHead and are linked by @id.
-const profileSchema = {
-	'@context': 'https://schema.org',
-	'@type': 'ProfilePage',
-	url: new URL('/about/', Astro.site).href,
-	mainEntity: { '@id': new URL('/#person', Astro.site).href, name: 'Ana Carolina Gomes' },
-};
+// ProfilePage + the full Person entity: this page is where the author lives.
+// Posts and the rest of the site point to it by @id.
+const pageUrl = absolute(Astro.site, '/about/');
+const schema = [
+	{
+		'@type': 'ProfilePage',
+		'@id': pageUrl,
+		url: pageUrl,
+		mainEntity: { '@id': ids(Astro.site).person },
+		isPartOf: { '@id': ids(Astro.site).website },
+	},
+	await personNode(Astro.site),
+];
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} />
-		<script type="application/ld+json" set:html={JSON.stringify(profileSchema)} />
+		<BaseHead title={title} description={description} schema={schema} />
 	</head>
 	<body>
 		<Header />

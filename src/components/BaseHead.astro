@@ -1,19 +1,23 @@
 ---
-// Everything inside <head>: metadata, social cards, fonts and site-wide schema
+// Everything inside <head>: metadata, social cards, fonts and the JSON-LD graph
 import '../styles/global.css';
 import { Font } from 'astro:assets';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
-import { CERTIFICATIONS, SKILL_AREAS } from '../data/skills';
-
-// Person.knowsAbout: the skill areas and every skill in them (from the Skills page data)
-const knowsAbout = [...new Set(SKILL_AREAS.flatMap((area) => [area.title, ...area.items]))];
+import SchemaGraph from './SchemaGraph.astro';
+import { SITE_TITLE } from '../consts';
+import { AUTHOR } from '../data/author';
 
 interface Props {
 	title: string;
 	description: string;
-	image?: string; // a file in /public, e.g. '/og-default.png'
+	image?: string; // a site path, e.g. '/og-default.png' or an optimised /_astro/ image
+	imageWidth?: number;
+	imageHeight?: number;
 	imageAlt?: string;
 	type?: 'website' | 'article';
+	// Article dates for article:published_time / article:modified_time
+	article?: { publishedTime: Date; modifiedTime: Date };
+	// Page-specific JSON-LD nodes, added to the site graph
+	schema?: Record<string, unknown>[];
 	noindex?: boolean;
 }
 
@@ -22,13 +26,16 @@ const {
 	title,
 	description,
 	image = DEFAULT_IMAGE,
+	imageWidth = image === DEFAULT_IMAGE ? 1200 : undefined,
+	imageHeight = image === DEFAULT_IMAGE ? 630 : undefined,
 	imageAlt = 'Ana Carolina Gomes, SEO Specialist',
 	type = 'website',
+	article,
+	schema = [],
 	noindex = false,
 } = Astro.props;
 
 const site = Astro.site ?? new URL('https://ac-mkt.github.io');
-const siteUrl = site.href.replace(/\/$/, '');
 
 // Canonical always ends with "/" to match how GitHub Pages serves pages
 const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
@@ -37,51 +44,6 @@ const imageURL = new URL(image, site);
 
 // Google Search Console: paste only the code from content="..." between the quotes
 const googleVerification = '3fV4GH4Urk2x1QbUafsUUqzSzxA3oyUl7zXSgfxMmOE';
-
-// Site-wide schema graph: who you are, what the site is, and what this page is
-const siteGraph = {
-	'@context': 'https://schema.org',
-	'@graph': [
-		{
-			'@type': 'WebSite',
-			'@id': `${siteUrl}/#website`,
-			url: `${siteUrl}/`,
-			name: SITE_TITLE,
-			alternateName: 'Ana Carolina Gomes',
-			description: SITE_DESCRIPTION,
-			inLanguage: 'en',
-			publisher: { '@id': `${siteUrl}/#person` },
-		},
-		{
-			'@type': 'Person',
-			'@id': `${siteUrl}/#person`,
-			name: 'Ana Carolina Gomes',
-			jobTitle: 'SEO & GEO Specialist',
-			url: `${siteUrl}/`,
-			sameAs: ['https://www.linkedin.com/in/anacpsg'],
-			address: { '@type': 'PostalAddress', addressLocality: 'Belo Horizonte', addressRegion: 'Minas Gerais', addressCountry: 'BR' },
-			alumniOf: { '@type': 'CollegeOrUniversity', name: 'Universidade Estácio de Sá' },
-			knowsLanguage: ['pt', 'en', 'es'],
-			knowsAbout,
-			hasCredential: CERTIFICATIONS.map((cert) => ({
-				'@type': 'EducationalOccupationalCredential',
-				name: cert.name,
-				recognizedBy: { '@type': 'Organization', name: cert.issuer },
-				...(cert.url ? { url: cert.url } : {}),
-			})),
-		},
-		{
-			'@type': 'WebPage',
-			'@id': `${canonicalURL.href}#webpage`,
-			url: canonicalURL.href,
-			name: title,
-			description,
-			inLanguage: 'en',
-			isPartOf: { '@id': `${siteUrl}/#website` },
-			primaryImageOfPage: imageURL.href,
-		},
-	],
-};
 ---
 
 <!-- Basics -->
@@ -119,15 +81,18 @@ const siteGraph = {
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={imageURL} />
+{imageWidth && <meta property="og:image:width" content={String(imageWidth)} />}
+{imageHeight && <meta property="og:image:height" content={String(imageHeight)} />}
+<meta property="og:image:alt" content={imageAlt} />
 {
-	image === DEFAULT_IMAGE && (
+	article && (
 		<>
-			<meta property="og:image:width" content="1200" />
-			<meta property="og:image:height" content="630" />
+			<meta property="article:published_time" content={article.publishedTime.toISOString()} />
+			<meta property="article:modified_time" content={article.modifiedTime.toISOString()} />
+			<meta property="article:author" content={new URL(AUTHOR.aboutUrl, site).href} />
 		</>
 	)
 }
-<meta property="og:image:alt" content={imageAlt} />
 
 <!-- X / Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
@@ -135,4 +100,4 @@ const siteGraph = {
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={imageURL} />
 
-<script type="application/ld+json" set:html={JSON.stringify(siteGraph)} />
+<SchemaGraph nodes={schema} />

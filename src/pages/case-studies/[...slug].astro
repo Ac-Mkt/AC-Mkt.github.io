@@ -4,6 +4,7 @@ import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { formatDate } from '../../utils/date';
+import { authorRef } from '../../utils/schema';
 import { CASE_TYPE_LONG, getCaseStudies, hasPage } from '../../utils/cases';
 
 // Only case studies with a written body get their own page
@@ -23,7 +24,7 @@ const published = formatDate(pubDate, 'long');
 // Article + breadcrumb schema. Author and publisher link to the Person in BaseHead.
 const siteUrl = (Astro.site ?? new URL('https://ac-mkt.github.io')).href.replace(/\/$/, '');
 const pageUrl = `${siteUrl}/case-studies/${entry.id}/`;
-const person = { '@type': 'Person', '@id': `${siteUrl}/#person`, name: 'Ana Carolina Gomes' };
+const person = authorRef(Astro.site);
 
 const caseSchema = {
 	'@context': 'https://schema.org',

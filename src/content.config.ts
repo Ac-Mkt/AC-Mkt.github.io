@@ -13,12 +13,15 @@ const blog = defineCollection({
 			// Transform string to Date object
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
-			heroImage: z.optional(image()),
-			heroImageAlt: z.string().optional(),
-			heroImageCredit: z.string().optional(),
-			heroImageCreditUrl: z.string().optional(),
-			// Shown in the mobile "Latest notes" row on the homepage
-			category: z.string().optional(),
+			category: z.string(),
+			tags: z.array(z.string()).optional(),
+			// Cover image (a file in src/assets) and its alt text
+			image: image(),
+			imageAlt: z.string(),
+			// Photo credit shown under the cover image
+			imageCredit: z.string().optional(),
+			imageCreditUrl: z.string().optional(),
+			draft: z.boolean().default(false),
 		}),
 });
 

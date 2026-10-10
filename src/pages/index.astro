@@ -2,7 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { getCollection } from 'astro:content';
+import { getPosts } from '../utils/posts';
 import { Image } from 'astro:assets';
 import portrait from '../assets/ana-carolina-gomes-color.jpg';
 import { formatDate, isoDate } from '../utils/date';
@@ -37,10 +37,8 @@ const work = [
 	},
 ];
 
-// Latest post (the collection has no draft field, so every post is published)
-const [latest] = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+// Latest published post (drafts excluded)
+const [latest] = await getPosts();
 ---
 
 <!doctype html>
@@ -129,10 +127,10 @@ const [latest] = (await getCollection('blog')).sort(
 						{
 							latest && (
 								<a class="note" href={`/blog/${latest.id}/`}>
-									{latest.data.heroImage && (
+									{latest.data.image && (
 										<Image
 											class="note-img"
-											src={latest.data.heroImage}
+											src={latest.data.image}
 											alt=""
 											widths={[176, 208, 320, 416]}
 											sizes="(max-width: 767px) 88px, (max-width: 1023px) 160px, 208px"

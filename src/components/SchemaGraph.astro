@@ -1,0 +1,30 @@
+---
+// Prints ONE JSON-LD script with an @graph: the WebSite (every page) plus any page-specific
+// nodes passed in `nodes` (ProfilePage + Person on About, BlogPosting + breadcrumb on posts...).
+import { SITE_TITLE } from '../consts';
+import { ids } from '../utils/schema';
+
+interface Props {
+	nodes?: Record<string, unknown>[];
+}
+
+const { nodes = [] } = Astro.props;
+const { person, website } = ids(Astro.site);
+
+const graph = {
+	'@context': 'https://schema.org',
+	'@graph': [
+		{
+			'@type': 'WebSite',
+			'@id': website,
+			url: new URL('/', website).href,
+			name: SITE_TITLE,
+			inLanguage: 'en',
+			publisher: { '@id': person },
+		},
+		...nodes,
+	],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(graph)} />
