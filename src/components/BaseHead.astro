@@ -3,6 +3,10 @@
 import '../styles/global.css';
 import { Font } from 'astro:assets';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { CERTIFICATIONS, SKILL_AREAS } from '../data/skills';
+
+// Person.knowsAbout: the skill areas and every skill in them (from the Skills page data)
+const knowsAbout = [...new Set(SKILL_AREAS.flatMap((area) => [area.title, ...area.items]))];
 
 interface Props {
 	title: string;
@@ -58,15 +62,13 @@ const siteGraph = {
 			address: { '@type': 'PostalAddress', addressLocality: 'Belo Horizonte', addressRegion: 'Minas Gerais', addressCountry: 'BR' },
 			alumniOf: { '@type': 'CollegeOrUniversity', name: 'Universidade Estácio de Sá' },
 			knowsLanguage: ['pt', 'en', 'es'],
-			knowsAbout: [
-				'Search Engine Optimization',
-				'Link Building',
-				'Digital PR',
-				'Generative Engine Optimization',
-				'Answer Engine Optimization',
-				'Schema Markup',
-				'Python',
-			],
+			knowsAbout,
+			hasCredential: CERTIFICATIONS.map((cert) => ({
+				'@type': 'EducationalOccupationalCredential',
+				name: cert.name,
+				recognizedBy: { '@type': 'Organization', name: cert.issuer },
+				...(cert.url ? { url: cert.url } : {}),
+			})),
 		},
 		{
 			'@type': 'WebPage',

@@ -13,9 +13,4 @@ export const NAV_LINKS = [
 	{ href: '/contact/', label: 'Contact' },
 ];
 
-// Shown on the Home and Skills pages
-export const CERTIFICATIONS = [
-	{ name: 'GenAI for SEO: A Hands-On Playbook', issuer: 'IBM', year: '2026' },
-	{ name: 'Mastering Digital PR with Brian Dean', issuer: 'Semrush', year: '2025' },
-	{ name: 'Content Optimization Masterclass', issuer: 'Surfer', year: '2025' },
-];
+// Skills and certifications live in src/data/skills.ts
