@@ -7,6 +7,8 @@ import { defineConfig, fontProviders } from 'astro/config';
 export default defineConfig({
 	site: 'https://ac-mkt.github.io',
 	integrations: [sitemap()],
+	// Inline the (small) CSS into each page so it doesn't block the first render
+	build: { inlineStylesheets: 'always' },
 	// Self-hosted Hanken Grotesk (see <Font> in src/components/BaseHead.astro)
 	fonts: [
 		{
