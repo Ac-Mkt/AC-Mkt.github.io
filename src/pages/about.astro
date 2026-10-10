@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Collapsible from '../components/Collapsible.astro';
 import { AUTHOR, EDUCATION, EXPERIENCE, LANGUAGES } from '../data/author';
 import { absolute, ids, personNode } from '../utils/schema';
 
@@ -123,7 +124,6 @@ const schema = [
 					<div class="m-profile-text">
 						<h1>{AUTHOR.name}</h1>
 						<span class="m-role">{AUTHOR.jobTitle} · Belo Horizonte</span>
-						<span class="m-open"><span class="m-dot" aria-hidden="true"></span>Open to new roles</span>
 					</div>
 				</div>
 
@@ -156,12 +156,7 @@ const schema = [
 				</div>
 
 				<div class="m-sections">
-					<details open>
-						<summary>
-							<span class="m-sum-text"><h2>My story</h2></span>
-							<svg class="i-plus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
-							<svg class="i-minus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /></svg>
-						</summary>
+					<Collapsible title="My story" open>
 						<div class="m-story">
 							<p>
 								I started in marketing and found SEO through content. My first SEO role involved writing
@@ -181,17 +176,9 @@ const schema = [
 								Looker Studio) and Generative Engine Optimization.
 							</p>
 						</div>
-					</details>
+					</Collapsible>
 
-					<details>
-						<summary>
-							<span class="m-sum-text">
-								<h2>Experience</h2>
-								<span class="m-oneline">4 roles · SEO Off-Page Specialist since Jul 2024</span>
-							</span>
-							<svg class="i-plus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
-							<svg class="i-minus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /></svg>
-						</summary>
+					<Collapsible title="Experience" summary="4 roles · SEO Off-Page Specialist since Jul 2024">
 						<ol class="m-list">
 							{
 								EXPERIENCE.map((job) => (
@@ -204,36 +191,20 @@ const schema = [
 								))
 							}
 						</ol>
-					</details>
+					</Collapsible>
 
-					<details>
-						<summary>
-							<span class="m-sum-text">
-								<h2>Education</h2>
-								<span class="m-oneline">CST in Marketing · Estácio, 2022 – 2024</span>
-							</span>
-							<svg class="i-plus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
-							<svg class="i-minus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /></svg>
-						</summary>
+					<Collapsible title="Education" summary="CST in Marketing · Estácio, 2022 – 2024">
 						<p class="m-edu">
 							<span class="m-item">{EDUCATION.degree}</span>
 							<span class="m-item-meta">{EDUCATION.school} · {EDUCATION.dates}</span>
 						</p>
-					</details>
+					</Collapsible>
 
-					<details>
-						<summary>
-							<span class="m-sum-text">
-								<h2>Languages</h2>
-								<span class="m-oneline">Portuguese, English (C1), Spanish (A1)</span>
-							</span>
-							<svg class="i-plus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
-							<svg class="i-minus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /></svg>
-						</summary>
+					<Collapsible title="Languages" summary="Portuguese, English (C1), Spanish (A1)">
 						<ul class="m-langs">
 							{LANGUAGES.map((l) => <li>{l.name} — {l.level}</li>)}
 						</ul>
-					</details>
+					</Collapsible>
 				</div>
 			</div>
 		</main>
@@ -378,24 +349,6 @@ const schema = [
 			line-height: 1.4;
 		}
 
-		.m-open {
-			display: inline-flex;
-			align-items: center;
-			gap: 6px;
-			margin-top: 2px;
-			color: var(--success);
-			font-size: 12px;
-			font-weight: 600;
-			line-height: 1.4;
-		}
-
-		.m-dot {
-			width: 7px;
-			height: 7px;
-			border-radius: 50%;
-			background: var(--success);
-		}
-
 		.m-summary {
 			margin: 20px 0 0;
 			color: var(--ink-2);
@@ -468,70 +421,11 @@ const schema = [
 			border-top: 1px solid var(--line);
 		}
 
-		details {
-			border-bottom: 1px solid var(--line);
-		}
-
-		summary {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			gap: 16px;
-			min-height: 64px;
-			list-style: none;
-			cursor: pointer;
-		}
-
-		summary::-webkit-details-marker {
-			display: none;
-		}
-
-		.m-sum-text {
-			display: flex;
-			flex-direction: column;
-			gap: 2px;
-			min-width: 0;
-		}
-
-		summary h2 {
+		/* Content inside the Collapsible sections */
+		.m-list,
+		.m-langs,
+		.m-edu {
 			margin: 0;
-			color: var(--ink);
-			font-size: 19px;
-			font-weight: 500;
-			letter-spacing: 0;
-			line-height: 1.3;
-		}
-
-		.m-oneline {
-			color: var(--meta);
-			font-size: 13px;
-			line-height: 1.4;
-		}
-
-		details[open] .m-oneline {
-			display: none;
-		}
-
-		summary svg {
-			flex: none;
-			fill: none;
-			stroke: var(--ink);
-			stroke-width: 2;
-			stroke-linecap: round;
-		}
-
-		.i-minus,
-		details[open] .i-plus {
-			display: none;
-		}
-
-		details[open] .i-minus {
-			display: block;
-		}
-
-		details > :not(summary) {
-			margin: 0;
-			padding-bottom: 20px;
 		}
 
 		.m-story {

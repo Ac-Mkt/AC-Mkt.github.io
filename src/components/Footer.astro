@@ -2,16 +2,18 @@
 import { NAV_LINKS } from '../consts';
 
 interface Props {
-	// Phones: links first, then ©, no LinkedIn (homepage and About)
+	// Phones: links first, then ©, no LinkedIn (homepage, About, Skills, Blog)
 	compact?: boolean;
+	// Phones, compact only: space above the footer in px (default 40)
+	mobileGap?: number;
 }
 
-const { compact = false } = Astro.props;
+const { compact = false, mobileGap = 40 } = Astro.props;
 const year = new Date().getFullYear();
 const links = NAV_LINKS.filter((link) => link.href !== '/contact/');
 ---
 
-<footer class:list={['site-footer', 'container', { compact }]}>
+<footer class:list={['site-footer', 'container', { compact }]} style={`--footer-gap: ${mobileGap}px`}>
 	<div class="inner">
 		<p>&copy; {year} Ana Carolina Gomes</p>
 		<nav aria-label="Footer">
@@ -92,7 +94,7 @@ const links = NAV_LINKS.filter((link) => link.href !== '/contact/');
 
 		/* Compact variant (homepage, About) */
 		.compact {
-			margin-top: 40px;
+			margin-top: var(--footer-gap);
 		}
 
 		.compact .inner {

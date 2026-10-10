@@ -2,7 +2,12 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Collapsible from '../components/Collapsible.astro';
 import { CERTIFICATIONS, CERTIFICATIONS_INTRO, LEARNING, SKILL_AREAS } from '../data/skills';
+
+// Closed-section summary on phones: the first 3 skills, then "+N" for the rest
+const areaSummary = (items: string[]) =>
+	items.slice(0, 3).join(', ') + (items.length > 3 ? ` +${items.length - 3}` : '');
 
 const title = 'Skills — Ana Carolina Gomes';
 const description =
@@ -31,13 +36,81 @@ const breadcrumb = {
 		<main class="skills">
 			<header class="intro">
 				<h1>Skills</h1>
-				<p>
+				<p class="d-only">
 					What I work with, grouped by area. For how these skills play out in practice, see the{' '}
+					<a href="/case-studies/">case studies</a>.
+				</p>
+				<p class="m-only">
+					What I work with, grouped by area. See them in practice in the{' '}
 					<a href="/case-studies/">case studies</a>.
 				</p>
 			</header>
 
-			<div class="rows">
+			<!-- Phones: the same data as collapsible sections -->
+			<div class="m-sections m-only">
+				{
+					SKILL_AREAS.map((area, i) => (
+						<Collapsible title={area.title} summary={areaSummary(area.items)} open={i === 0} truncate>
+							<p class="m-desc">{area.description}</p>
+							<ul class="m-tags">
+								{area.items.map((item) => (
+									<li>{item}</li>
+								))}
+							</ul>
+						</Collapsible>
+					))
+				}
+
+				<Collapsible title={LEARNING.title} summary={LEARNING.items.join(', ')} truncate>
+					<p class="m-desc">{LEARNING.description}</p>
+					<ul class="m-tags m-learning">
+						{
+							LEARNING.items.map((item) => (
+								<li>
+									<span class="dot" aria-hidden="true" />
+									{item}
+								</li>
+							))
+						}
+					</ul>
+				</Collapsible>
+
+				<Collapsible
+					title={CERTIFICATIONS_INTRO.title}
+					summary={CERTIFICATIONS.map((c) => `${c.issuer} ${c.year}`).join(' · ')}
+					truncate
+				>
+					<p class="m-desc m-desc-certs">{CERTIFICATIONS_INTRO.description}</p>
+					<div class="m-certs">
+						{
+							CERTIFICATIONS.map((cert) =>
+								cert.url ? (
+									<a class="m-cert" href={cert.url} target="_blank" rel="noopener">
+										<span class="m-cert-name">{cert.name}</span>
+										<span class="m-cert-meta">
+											{cert.issuer}, {cert.year}
+										</span>
+										<span class="m-cert-link">
+											View certificate <span aria-hidden="true">↗</span>
+											<span class="sr-only">(opens in a new tab)</span>
+										</span>
+									</a>
+								) : (
+									<div class="m-cert">
+										<span class="m-cert-name">{cert.name}</span>
+										<span class="m-cert-meta">
+											{cert.issuer}, {cert.year}
+										</span>
+									</div>
+								),
+							)
+						}
+					</div>
+				</Collapsible>
+			</div>
+
+			<!-- Tablet and desktop -->
+			<div class="rows d-only">
 				{
 					SKILL_AREAS.map((area) => (
 						<section class="row">
@@ -104,7 +177,7 @@ const breadcrumb = {
 				</section>
 			</div>
 		</main>
-		<Footer />
+		<Footer compact />
 	</body>
 </html>
 
@@ -300,30 +373,119 @@ const breadcrumb = {
 	}
 
 	/* ---------- <768px ---------- */
+	/* Phone and wider-screen variants (below / from 768px) */
+	@media (min-width: 768px) {
+		.m-only {
+			display: none !important;
+		}
+	}
+
 	@media (max-width: 767px) {
+		.d-only {
+			display: none !important;
+		}
+
+		.skills {
+			padding-top: 24px;
+			padding-bottom: 0;
+		}
+
 		.intro h1 {
-			font-size: 40px;
+			font-size: 32px;
+			letter-spacing: -0.03em;
+			line-height: 1.1;
 		}
 
 		.intro p {
-			font-size: 16px;
+			margin-top: 12px;
+			font-size: 15px;
+			line-height: 1.5;
 		}
 
-		.row {
-			padding: 32px 0;
+		/* Collapsible sections (component: Collapsible.astro) */
+		.m-sections {
+			margin-top: 32px;
+			border-top: 1px solid var(--line);
 		}
 
-		.tags li {
+		.m-desc {
+			margin: 0 0 12px;
+			color: var(--muted);
 			font-size: 14px;
+			line-height: 1.5;
 		}
 
-		.cert {
-			grid-template-columns: 1fr;
-			gap: 4px;
+		.m-desc-certs {
+			margin-bottom: 4px;
 		}
 
-		.cert-link {
-			text-align: left;
+		.m-tags {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 6px;
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		.m-tags li {
+			padding: 6px 10px;
+			border-radius: 8px;
+			background: var(--tag);
+			color: var(--ink);
+			font-size: 14px;
+			line-height: 1.4;
+			cursor: default;
+		}
+
+		.m-learning li {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding: 5px 10px;
+			border: 1px dashed var(--dashed);
+			background: transparent;
+		}
+
+		.m-learning .dot {
+			width: 7px;
+			height: 7px;
+		}
+
+		.m-certs {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.m-cert {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+			padding: 12px 0;
+			border-bottom: 1px solid var(--line-soft);
+			color: inherit;
+			text-decoration: none;
+		}
+
+		.m-cert:last-child {
+			border-bottom: 0;
+		}
+
+		.m-cert-name {
+			color: var(--ink);
+			font-size: 16px;
+			font-weight: 500;
+		}
+
+		.m-cert-meta {
+			color: var(--meta);
+			font-size: 13px;
+		}
+
+		.m-cert-link {
+			color: var(--ink);
+			font-size: 14px;
+			font-weight: 600;
 		}
 	}
 </style>
