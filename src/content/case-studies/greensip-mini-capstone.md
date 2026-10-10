@@ -1,12 +1,13 @@
 ---
 title: 'GreenSip: an answer-ready article on a YMYL topic'
 description: 'Keyword strategy, AI-assisted writing and schema markup for "green tea for weight loss", built for a fictional wellness brand to practice content that search engines and AI tools can trust.'
-result: '6-keyword cluster with 66,500+ monthly US searches; schema validated with zero errors'
-type: 'Course project'
-pubDate: 2026-10-07
+type: 'course'
 order: 3
+metric:
+  value: '66.5k'
+  label: 'monthly US searches in a 6-keyword cluster; schema with zero errors'
+pubDate: 2026-10-07
 tools: ['WordStream Keyword Tool', 'Generative AI', 'TechnicalSEO.com Schema Generator', 'Schema.org Validator']
-status: 'published'
 ---
 
 > GreenSip is a fictional brand created for the capstone of *SEO Mastery: From Fundamentals to GenAI and GEO Strategies* on Coursera. The author, publisher and URLs used in the schema were provided by the course. Since the page was never published, there is no traffic data. The results below are the deliverables and their quality checks.

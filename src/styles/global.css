@@ -10,7 +10,9 @@
 	--meta: #4a4a48; /* eyebrow, labels, dates, footer */
 	--line: #d4d3cf; /* dividers, field borders */
 	--line-soft: #dcdbd7; /* header bottom border */
-	--success: #1f7a4d; /* "Open to new roles" dot */
+	--success: #1f7a4d; /* "Open to new roles" dot, "Ongoing" status */
+	--progress: #b26b00; /* "In progress" status */
+	--chip-border: #c9c8c4; /* filter buttons, status pills */
 	--link: #1f3fbf; /* hover colour for links */
 
 	/* Older names, kept so every page uses the same palette */

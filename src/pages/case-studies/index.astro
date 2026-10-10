@@ -1,35 +1,457 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import CaseList from '../../components/CaseList.astro';
+import { CASE_TYPES, caseUrl, getCaseStudies, hasPage } from '../../utils/cases';
 
-const cases = (await getCollection('caseStudies')).sort((a, b) => a.data.order - b.data.order);
+const cases = await getCaseStudies();
 
-const title = 'Case studies | Ana Carolina Gomes';
+const title = 'Case studies — Ana Carolina Gomes';
 const description =
-	'SEO, Digital PR and AI workflow case studies by Ana Carolina Gomes: the challenge, the strategy, the execution and the results.';
+	'SEO case studies by Ana Carolina Gomes: link building and Digital PR across international markets, AI-assisted workflows, and course and personal projects.';
+
+// Filter buttons, with counts from the data
+const filters = [
+	{ value: 'all', label: 'All', count: cases.length },
+	...Object.entries(CASE_TYPES).map(([value, label]) => ({
+		value,
+		label,
+		count: cases.filter((entry) => entry.data.type === value).length,
+	})),
+];
+
+// CollectionPage + ItemList (cases with their own page) + breadcrumb
+const siteUrl = (Astro.site ?? new URL('https://ac-mkt.github.io')).href.replace(/\/$/, '');
+const pageUrl = `${siteUrl}/case-studies/`;
+const linked = cases.filter(hasPage);
+const schema = {
+	'@context': 'https://schema.org',
+	'@graph': [
+		{
+			'@type': 'CollectionPage',
+			'@id': `${pageUrl}#collection`,
+			url: pageUrl,
+			name: 'Case studies',
+			description,
+			isPartOf: { '@id': `${siteUrl}/#website` },
+			mainEntity: {
+				'@type': 'ItemList',
+				itemListElement: linked.map((entry, i) => ({
+					'@type': 'ListItem',
+					position: i + 1,
+					name: entry.data.title,
+					url: `${siteUrl}${caseUrl(entry)}`,
+				})),
+			},
+		},
+		{
+			'@type': 'BreadcrumbList',
+			itemListElement: [
+				{ '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+				{ '@type': 'ListItem', position: 2, name: 'Case studies', item: pageUrl },
+			],
+		},
+	],
+};
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
+		<script type="application/ld+json" set:html={JSON.stringify(schema)} />
 	</head>
 	<body>
 		<Header />
-		<main>
-			<header class="page-head">
+		<main class="cases">
+			<header class="intro">
 				<h1>Case studies</h1>
 				<p>
 					Professional work, course projects and personal builds. Each one covers the challenge, the
-					strategy, how it was executed and what came out of it. Client names and sensitive figures are
-					left out where needed.
+					strategy, how it was executed and what came out of it. Client names and sensitive figures
+					are left out where needed.
 				</p>
 			</header>
-			<CaseList cases={cases} />
+
+			<div class="filters" role="group" aria-label="Filter case studies">
+				{
+					filters.map((filter) => (
+						<button type="button" data-filter={filter.value} aria-pressed={filter.value === 'all' ? 'true' : 'false'}>
+							<span>
+								<span class="f-word">{filter.label}</span>{' '}<span class="f-count">{filter.count}</span>
+							</span>
+						</button>
+					))
+				}
+			</div>
+			<p class="sr-only" aria-live="polite" data-filter-status></p>
+
+			<ul class="list">
+				{
+					cases.map((entry) => {
+						const Row = hasPage(entry) ? 'a' : 'div';
+						const { metric, status } = entry.data;
+						return (
+							<li data-type={entry.data.type}>
+								<Row class:list={['row', { linked: hasPage(entry) }]} href={hasPage(entry) ? caseUrl(entry) : undefined}>
+									<div class="main">
+										<h2 class="title">{entry.data.title}</h2>
+										<p class="desc">{entry.data.description}</p>
+										{hasPage(entry) && (
+											<span class="read">
+												Read case study
+												<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+													<path d="M5 12h14M13 6l6 6-6 6" />
+												</svg>
+											</span>
+										)}
+									</div>
+									<div class="side">
+										{metric && (
+											<>
+												<span class="metric">{metric.value}</span>
+												<span class="side-label">{metric.label}</span>
+											</>
+										)}
+										{status && (
+											<>
+												<span class="status">
+													<span class:list={['dot', status.tone]} aria-hidden="true" />
+													{status.label}
+												</span>
+												<span class="side-label">{status.note}</span>
+											</>
+										)}
+									</div>
+								</Row>
+							</li>
+						);
+					})
+				}
+			</ul>
 		</main>
 		<Footer />
+
+		<script>
+			// Client-side filter. Every row is in the HTML; filtering only toggles `hidden`.
+			// The choice is kept in ?type= so filtered views can be linked.
+			const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+			const rows = Array.from(document.querySelectorAll<HTMLElement>('.list > li'));
+			const status = document.querySelector<HTMLElement>('[data-filter-status]');
+			const valid = buttons.map((button) => button.dataset.filter);
+
+			function apply(type: string, announce: boolean) {
+				let shown = 0;
+				rows.forEach((row) => {
+					row.hidden = type !== 'all' && row.dataset.type !== type;
+					if (!row.hidden) shown++;
+				});
+				buttons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.filter === type)));
+				if (announce && status) {
+					status.textContent = `${shown} case ${shown === 1 ? 'study' : 'studies'} shown`;
+				}
+			}
+
+			buttons.forEach((button) => {
+				button.addEventListener('click', () => {
+					const type = button.dataset.filter ?? 'all';
+					apply(type, true);
+					const url = new URL(window.location.href);
+					if (type === 'all') url.searchParams.delete('type');
+					else url.searchParams.set('type', type);
+					history.replaceState(null, '', url);
+				});
+			});
+
+			const initial = new URLSearchParams(window.location.search).get('type');
+			if (initial && valid.includes(initial)) apply(initial, false);
+		</script>
 	</body>
 </html>
+
+<style>
+	/* ---------- Page ---------- */
+	.cases {
+		padding-top: 96px;
+		padding-bottom: 64px; /* + the footer's 64px top margin = 128px below the list */
+	}
+
+	.intro h1 {
+		margin: 0;
+		color: var(--ink);
+		font-size: 64px;
+		font-weight: 500;
+		letter-spacing: -0.03em;
+		line-height: 1.05;
+	}
+
+	.intro p {
+		max-width: 640px;
+		margin: 24px 0 0;
+		color: var(--ink-2);
+		font-size: 18px;
+		line-height: 1.5;
+	}
+
+	/* ---------- Filters ---------- */
+	.filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 48px;
+	}
+
+	.filters button {
+		display: inline-flex;
+		align-items: center;
+		height: 40px;
+		padding: 0 16px;
+		border: 1px solid var(--chip-border);
+		border-radius: 20px;
+		background: transparent;
+		color: var(--ink);
+		font-family: inherit;
+		font-size: 15px;
+		font-weight: 400;
+		white-space: nowrap;
+		cursor: pointer;
+	}
+
+	.filters button:hover {
+		border-color: var(--ink);
+	}
+
+	.f-count {
+		color: var(--meta);
+	}
+
+	.filters button[aria-pressed='true'] {
+		border-color: var(--ink);
+		background: var(--ink);
+		color: #fafaf8;
+	}
+
+	.filters button[aria-pressed='true'] .f-word {
+		font-weight: 600;
+	}
+
+	.filters button[aria-pressed='true'] .f-count {
+		color: inherit;
+		font-weight: 400;
+		opacity: 0.7;
+	}
+
+	/* ---------- List ---------- */
+	.list {
+		margin: 48px 0 0;
+		padding: 0;
+		border-top: 1px solid var(--line);
+		list-style: none;
+	}
+
+	.list > li[hidden] {
+		display: none;
+	}
+
+	.row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 240px;
+		column-gap: 64px;
+		padding: 40px 0;
+		border-bottom: 1px solid var(--line);
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.main {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		min-width: 0;
+	}
+
+	.title {
+		margin: 0;
+		color: var(--ink);
+		font-size: 24px;
+		font-weight: 500;
+		letter-spacing: -0.01em;
+		line-height: 1.25;
+		text-underline-offset: 4px;
+	}
+
+	.linked:hover .title {
+		text-decoration: underline;
+	}
+
+	.desc {
+		margin: 0;
+		color: var(--muted);
+		font-size: 16px;
+		line-height: 1.5;
+	}
+
+	.read {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-top: 8px;
+		color: var(--ink);
+		font-size: 15px;
+		font-weight: 600;
+	}
+
+	.read svg {
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.side {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding-left: 24px;
+		border-left: 1px solid var(--line);
+	}
+
+	.metric {
+		color: var(--ink);
+		font-size: 48px;
+		font-weight: 500;
+		letter-spacing: -0.03em;
+		line-height: 1;
+	}
+
+	.side-label {
+		color: var(--meta);
+		font-size: 14px;
+		line-height: 1.5;
+	}
+
+	.status {
+		display: inline-flex;
+		align-items: center;
+		align-self: flex-start;
+		gap: 8px;
+		height: 28px;
+		padding: 0 12px;
+		border: 1px solid var(--chip-border);
+		border-radius: 14px;
+		color: var(--ink);
+		font-size: 13px;
+		font-weight: 600;
+	}
+
+	.dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+	}
+
+	.dot.progress {
+		background: var(--progress);
+	}
+
+	.dot.ongoing {
+		background: var(--success);
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	/* ---------- ≥1600px ---------- */
+	@media (min-width: 1600px) {
+		.intro h1 {
+			font-size: 72px;
+		}
+
+		.row {
+			grid-template-columns: minmax(0, 1fr) 280px;
+		}
+	}
+
+	/* ---------- 1024–1279px ---------- */
+	@media (max-width: 1279px) {
+		.row {
+			grid-template-columns: minmax(0, 1fr) 208px;
+			column-gap: 48px;
+		}
+	}
+
+	/* ---------- 768–1023px ---------- */
+	@media (max-width: 1023px) {
+		.intro h1 {
+			font-size: 48px;
+		}
+
+		.row {
+			grid-template-columns: 1fr;
+		}
+
+		.side {
+			margin-top: 24px;
+			padding-left: 0;
+			border-left: 0;
+		}
+
+		.metric {
+			font-size: 40px;
+		}
+	}
+
+	/* ---------- <768px ---------- */
+	@media (max-width: 767px) {
+		.intro h1 {
+			font-size: 40px;
+		}
+
+		.intro p {
+			font-size: 16px;
+		}
+
+		/* One horizontally scrollable row that bleeds to the screen edges */
+		.filters {
+			flex-wrap: nowrap;
+			margin-inline: calc(-1 * var(--pad));
+			padding: 2px var(--pad);
+			overflow-x: auto;
+			scroll-snap-type: x proximity;
+			scroll-padding-inline: var(--pad);
+			scrollbar-width: none;
+		}
+
+		.filters::-webkit-scrollbar {
+			display: none;
+		}
+
+		.filters button {
+			position: relative;
+			flex: none;
+			scroll-snap-align: start;
+		}
+
+		/* 44px tap area around the 40px buttons */
+		.filters button::after {
+			content: '';
+			position: absolute;
+			inset: -2px 0;
+		}
+
+		.row {
+			padding: 32px 0;
+		}
+
+		.title {
+			font-size: 20px;
+		}
+	}
+</style>

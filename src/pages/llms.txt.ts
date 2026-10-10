@@ -2,13 +2,12 @@
 // It updates itself whenever case studies or blog posts are published.
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { getCaseStudies, hasPage } from '../utils/cases';
 
 export const GET: APIRoute = async ({ site }) => {
 	const base = (site ?? new URL('https://ac-mkt.github.io')).href.replace(/\/$/, '');
 
-	const cases = (await getCollection('caseStudies', ({ data }) => data.status === 'published')).sort(
-		(a, b) => a.data.order - b.data.order,
-	);
+	const cases = (await getCaseStudies()).filter(hasPage);
 	const posts = (await getCollection('blog')).sort(
 		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 	);

@@ -24,15 +24,22 @@ const blog = defineCollection({
 
 const caseStudies = defineCollection({
 	loader: glob({ base: './src/content/case-studies', pattern: '**/*.{md,mdx}' }),
+	// A case with a Markdown body gets its own page (/case-studies/<slug>/); one without
+	// is listed as a plain, non-clickable row. See src/utils/cases.ts.
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
-		result: z.string(),
-		type: z.string(),
-		pubDate: z.coerce.date(),
+		type: z.enum(['professional', 'course', 'personal']),
 		order: z.number().default(99),
+		draft: z.boolean().default(false),
+		// Headline number shown on the right of the row
+		metric: z.object({ value: z.string(), label: z.string() }).optional(),
+		// Shown instead of a metric while the work isn't finished
+		status: z
+			.object({ label: z.string(), tone: z.enum(['progress', 'ongoing']), note: z.string() })
+			.optional(),
+		pubDate: z.coerce.date(),
 		tools: z.array(z.string()).default([]),
-		status: z.enum(['published', 'in-progress']).default('published'),
 	}),
 });
 

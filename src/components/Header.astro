@@ -98,10 +98,15 @@ const contactCurrent = isActive(Astro.url.pathname, '/contact/');
 		text-decoration: none;
 	}
 
-	.links a:hover,
-	.links a[aria-current='page'] {
+	.links a:hover {
 		text-decoration: underline;
 		text-underline-offset: 4px;
+	}
+
+	.links a[aria-current='page'] {
+		text-decoration: underline;
+		text-decoration-thickness: 2px;
+		text-underline-offset: 8px;
 	}
 
 	.contact {

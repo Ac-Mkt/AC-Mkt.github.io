@@ -1,19 +1,22 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { formatDate } from '../../utils/date';
+import { CASE_TYPE_LONG, getCaseStudies, hasPage } from '../../utils/cases';
 
-// Only published case studies get their own page
+// Only case studies with a written body get their own page
 export async function getStaticPaths() {
-	const cases = await getCollection('caseStudies', ({ data }) => data.status === 'published');
+	const cases = (await getCaseStudies()).filter(hasPage);
 	return cases.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
 }
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const { title, description, result, type, tools, pubDate } = entry.data;
+const { title, description, metric, status, tools, pubDate } = entry.data;
+const type = CASE_TYPE_LONG[entry.data.type];
+const result = metric ? `${metric.value} ${metric.label}` : status ? `${status.label}: ${status.note}` : '';
 
 const published = formatDate(pubDate, 'long');
 
@@ -67,10 +70,14 @@ const caseSchema = {
 				<p class="case-desc">{description}</p>
 
 				<dl class="case-meta">
-					<div>
-						<dt>Result</dt>
-						<dd>{result}</dd>
-					</div>
+					{
+						result && (
+							<div>
+								<dt>Result</dt>
+								<dd>{result}</dd>
+							</div>
+						)
+					}
 					<div>
 						<dt>Tools</dt>
 						<dd>{tools.join(', ')}</dd>
