@@ -2,11 +2,10 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { getPosts } from '../utils/posts';
+import { getPosts, postUrl } from '../utils/posts';
 import { Image } from 'astro:assets';
 import portrait from '../assets/ana-carolina-gomes-color.jpg';
 import { formatDate, isoDate } from '../utils/date';
-import { readingTime } from '../utils/readingTime';
 
 const title = 'Ana Carolina Gomes — SEO and brand visibility';
 const description =
@@ -22,6 +21,9 @@ const work = [
 		title: 'SEO in international, high-competition markets',
 		description:
 			'Link building and Digital PR at the core: an outreach and media partnership program across international markets, balancing link quality with acquisition cost. Around it, content and on-page work, plus AI-assisted workflows built with Claude Code and Python.',
+		// Shorter copy for phones
+		mobileDescription:
+			'Link building and Digital PR at the core, plus content, on-page and AI-assisted workflows.',
 		areas: 'Link building · Digital PR · Content · On-page · AI workflows',
 		metric: '250+',
 		metricLabel: 'links per quarter, 25% lower cost per link',
@@ -37,8 +39,8 @@ const work = [
 	},
 ];
 
-// Latest published post (drafts excluded)
-const [latest] = await getPosts();
+// The two latest published posts (drafts excluded), on every breakpoint
+const latest = (await getPosts()).slice(0, 2);
 ---
 
 <!doctype html>
@@ -49,15 +51,34 @@ const [latest] = await getPosts();
 	<body>
 		<Header />
 		<main class="home">
-			<!-- Hero -->
+			<!-- Hero (on phones: author row, headline, short intro, buttons) -->
 			<section class="container hero" aria-labelledby="hero-title">
 				<div class="hero-text">
-					<p class="eyebrow">Ana Carolina Gomes · SEO &amp; GEO Specialist · Belo Horizonte, Brazil</p>
+					<div class="m-author m-only">
+						<Image
+							src={portrait}
+							alt="Ana Carolina Gomes"
+							width={48}
+							height={48}
+							densities={[1, 2, 3]}
+							loading="eager"
+						/>
+						<div class="m-author-text">
+							<span class="m-author-name">Ana Carolina Gomes</span>
+							<span class="m-author-role">SEO &amp; GEO Specialist</span>
+							<span class="m-author-open"><span class="m-dot" aria-hidden="true"></span>Open to new roles</span>
+						</div>
+					</div>
+					<p class="eyebrow d-only">Ana Carolina Gomes · SEO &amp; GEO Specialist · Belo Horizonte, Brazil</p>
 					<h1 id="hero-title">How brands get found, trusted and cited in search.</h1>
-					<p class="intro">
+					<p class="intro d-only">
 						In almost four years of SEO, I’ve worked across content, on-page and off-page, mostly in
 						international, high-competition markets. Links, mentions and clear content shape which
 						brands AI tools choose to cite.
+					</p>
+					<p class="intro m-only">
+						Almost four years of SEO in international, high-competition markets: content, on-page and
+						off-page.
 					</p>
 					<div class="actions hero-actions">
 						<a class="btn btn-primary" href="/case-studies/">See my work</a>
@@ -65,14 +86,14 @@ const [latest] = await getPosts();
 					</div>
 				</div>
 
-				<figure class="portrait">
+				<figure class="portrait d-only">
 					<Image
 						src={portrait}
 						alt="Ana Carolina Gomes, SEO specialist"
 						width={456}
 						height={528}
 						widths={[416, 456, 768, 912, 1200]}
-						sizes="(max-width: 1023px) calc(100vw - 48px), (min-width: 1600px) 456px, (min-width: 1280px) 416px, 360px"
+						sizes="(max-width: 1023px) calc(100vw - 96px), (min-width: 1600px) 456px, (min-width: 1280px) 416px, 360px"
 						loading="eager"
 						fetchpriority="high"
 					/>
@@ -80,15 +101,61 @@ const [latest] = await getPosts();
 				</figure>
 			</section>
 
+			<!-- From the blog (phones only; wider screens show "Latest notes" further down) -->
+			{
+				latest.length > 0 && (
+					<section class="container m-blog m-only" aria-labelledby="m-blog-title">
+						<div class="m-head">
+							<h2 id="m-blog-title">From the blog</h2>
+							<a class="m-head-link" href="/blog/">
+								All posts
+								<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+									<path d="M5 12h14M13 6l6 6-6 6" />
+								</svg>
+							</a>
+						</div>
+						<ul class="m-posts">
+							{latest.map((post) => (
+								<li>
+									<a class="m-post" href={postUrl(post)}>
+										<Image
+											src={post.data.image}
+											alt={post.data.imageAlt}
+											width={88}
+											height={64}
+											densities={[1, 2, 3]}
+											loading="lazy"
+										/>
+										<span class="m-post-text">
+											<span class="m-post-meta">
+												{post.data.category} ·{' '}
+												<time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>
+											</span>
+											<span class="m-post-title">{post.data.title}</span>
+										</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				)
+			}
+
 			<!-- Selected work -->
-			<section class="container block" aria-labelledby="work-title">
+			<section class="container block work-block" aria-labelledby="work-title">
 				<div class="block-inner">
 					<div class="block-head">
 						<h2 id="work-title">Selected work</h2>
-						<p>
+						<p class="d-only">
 							What I do day to day, and a project from my studies: the problem, what I did and what
 							came out of it.
 						</p>
+						<a class="m-head-link m-only" href="/case-studies/">
+							All work
+							<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+								<path d="M5 12h14M13 6l6 6-6 6" />
+							</svg>
+						</a>
 					</div>
 					<div class="block-body">
 						<ul class="work">
@@ -99,8 +166,9 @@ const [latest] = await getPosts();
 											<div class="work-text">
 												<span class="label">{item.label}</span>
 												<h3 class="item-title">{item.title}</h3>
-												<span class="desc">{item.description}</span>
-												{item.areas && <span class="areas">{item.areas}</span>}
+												<span class:list={['desc', { 'd-only': item.mobileDescription }]}>{item.description}</span>
+												{item.mobileDescription && <span class="desc m-only">{item.mobileDescription}</span>}
+												{item.areas && <span class="areas d-only">{item.areas}</span>}
 											</div>
 											<div class="work-metric">
 												<span class="metric">{item.metric}</span>
@@ -111,94 +179,138 @@ const [latest] = await getPosts();
 								))
 							}
 						</ul>
-						<a class="text-link" href="/case-studies/">All work</a>
+						<a class="text-link d-only" href="/case-studies/">All work</a>
 					</div>
 				</div>
 			</section>
 
-			<!-- Latest notes -->
-			<section class="container block" aria-labelledby="notes-title">
+			<!-- Latest notes (tablet and desktop) -->
+			<section class="container block d-only" aria-labelledby="notes-title">
 				<div class="block-inner">
 					<div class="block-head">
 						<h2 id="notes-title">Latest notes</h2>
 						<p>Practical writing on SEO, GEO, link building and AI workflows.</p>
 					</div>
 					<div class="block-body">
-						{
-							latest && (
-								<a class="note" href={`/blog/${latest.id}/`}>
-									{latest.data.image && (
-										<Image
-											class="note-img"
-											src={latest.data.image}
-											alt=""
-											widths={[176, 208, 320, 416]}
-											sizes="(max-width: 767px) 88px, (max-width: 1023px) 160px, 208px"
-											loading="lazy"
-										/>
-									)}
-									<div class="note-text">
-										<span class="note-meta">
-											{latest.data.category && <span class="note-category">{latest.data.category} · </span>}
-											<time datetime={isoDate(latest.data.pubDate)}>{formatDate(latest.data.pubDate)}</time>
-										</span>
-										<h3 class="item-title">{latest.data.title}</h3>
-										<span class="desc note-desc">{latest.data.description}</span>
-										<span class="note-read">{readingTime(latest.body)} min read</span>
-									</div>
-								</a>
-							)
-						}
-						<a class="text-link all-posts" href="/blog/">All posts</a>
+						<ul class="notes">
+							{
+								latest.map((post) => (
+									<li>
+										<a class="note" href={postUrl(post)}>
+											<Image
+												class="note-img"
+												src={post.data.image}
+												alt=""
+												widths={[160, 208, 320, 416]}
+												sizes="(max-width: 1023px) 160px, 208px"
+												loading="lazy"
+											/>
+											<div class="note-text">
+												<span class="note-meta">
+													<time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>
+												</span>
+												<h3 class="item-title">{post.data.title}</h3>
+												<span class="desc">{post.data.description}</span>
+											</div>
+										</a>
+									</li>
+								))
+							}
+						</ul>
+						<a class="text-link" href="/blog/">All posts</a>
 					</div>
 				</div>
 			</section>
 
-			<!-- Get in touch -->
+			<!-- Get in touch (a card on wider screens, a plain list on phones) -->
 			<section class="container contact-wrap" aria-labelledby="contact-title">
 				<div class="contact">
 					<div>
 						<h2 id="contact-title">Get in touch</h2>
-						<p>
+						<p class="d-only">
 							A project in SEO or brand visibility, a role, or just want to compare notes? Email or
 							LinkedIn is the best way to reach me.
 						</p>
+						<p class="m-only">A project, a role, or just to compare notes.</p>
 					</div>
-					<div class="contact-actions">
+
+					<div class="contact-actions d-only">
 						<div class="email-field">
 							<span class="email">{EMAIL}</span>
-							<button class="copy" type="button" data-copy={EMAIL}>Copy</button>
+							<button class="copy" type="button" data-copy={EMAIL} data-copy-done="Email address copied">
+								Copy
+							</button>
 						</div>
-						<span class="sr-only" aria-live="polite" data-copy-status></span>
 						<div class="contact-buttons">
 							<a class="btn btn-primary" href={`mailto:${EMAIL}`}>Email me</a>
 							<a class="btn" href={LINKEDIN} target="_blank" rel="noopener me">LinkedIn</a>
 						</div>
 					</div>
+
+					<ul class="m-contact m-only">
+						<li class="m-row">
+							<a class="m-row-main" href={`mailto:${EMAIL}`}>
+								<span class="m-row-label">Email</span>
+								<span class="m-row-value">{EMAIL}</span>
+							</a>
+							<button
+								class="m-copy"
+								type="button"
+								aria-label="Copy email address"
+								data-copy={EMAIL}
+								data-copy-done="Email copied"
+							>
+								<svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+									<rect x="9" y="9" width="11" height="11" rx="2" />
+									<path d="M5 15V6a2 2 0 0 1 2-2h9" />
+								</svg>
+								<svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+									<path d="M5 12.5 10 17l9-10" />
+								</svg>
+							</button>
+						</li>
+						<li>
+							<a class="m-row m-row-link" href={LINKEDIN} target="_blank" rel="noopener me">
+								<span class="m-row-main">
+									<span class="m-row-label">LinkedIn</span>
+									<span class="m-row-value">Ana Carolina Gomes</span>
+								</span>
+								<span class="sr-only">(opens in a new tab)</span>
+								<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+									<path d="M7 17 17 7M9 7h8v8" />
+								</svg>
+							</a>
+						</li>
+					</ul>
+					<span class="sr-only" aria-live="polite" data-copy-status></span>
 				</div>
 			</section>
 		</main>
-		<Footer />
+		<Footer compact />
 
 		<script>
-			// Copy the email address; the label shows "Copied" for 2 seconds and screen readers hear it
-			const button = document.querySelector<HTMLButtonElement>('[data-copy]');
+			// Copy the email address. The desktop button shows "Copied" and the phone button a check,
+			// both for 2 seconds; screen readers hear the message in data-copy-done.
 			const status = document.querySelector<HTMLElement>('[data-copy-status]');
-			let timer: number | undefined;
-
-			button?.addEventListener('click', async () => {
-				try {
-					await navigator.clipboard.writeText(button.dataset.copy ?? '');
-					button.textContent = 'Copied';
-					if (status) status.textContent = 'Email address copied';
-					window.clearTimeout(timer);
-					timer = window.setTimeout(() => {
-						button.textContent = 'Copy';
-						if (status) status.textContent = '';
-					}, 2000);
-				} catch {
-					if (status) status.textContent = 'Could not copy. Select the address to copy it.';
-				}
+			document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((button) => {
+				const label = button.textContent?.trim() ?? '';
+				let timer: number | undefined;
+				button.addEventListener('click', async () => {
+					try {
+						await navigator.clipboard.writeText(button.dataset.copy ?? '');
+						button.dataset.copied = 'true';
+						if (label) button.textContent = 'Copied';
+						if (status) status.textContent = button.dataset.copyDone ?? 'Copied';
+						window.clearTimeout(timer);
+						timer = window.setTimeout(() => {
+							delete button.dataset.copied;
+							if (label) button.textContent = label;
+							if (status) status.textContent = '';
+						}, 2000);
+					} catch {
+						if (status) status.textContent = 'Could not copy. Select the address to copy it.';
+					}
+				});
 			});
 		</script>
 	</body>
@@ -214,6 +326,19 @@ const [latest] = await getPosts();
 
 	h2 {
 		margin: 0;
+	}
+
+	/* Mobile-only and desktop-only variants (below / from 768px) */
+	@media (min-width: 768px) {
+		.m-only {
+			display: none !important;
+		}
+	}
+
+	@media (max-width: 767px) {
+		.d-only {
+			display: none !important;
+		}
 	}
 
 	.desc {
@@ -352,7 +477,8 @@ const [latest] = await getPosts();
 	}
 
 	/* Work items */
-	.work {
+	.work,
+	.notes {
 		margin: 0;
 		padding: 0;
 		list-style: none;
@@ -422,6 +548,10 @@ const [latest] = await getPosts();
 	}
 
 	/* Latest notes */
+	.notes li + li {
+		margin-top: 32px;
+	}
+
 	.note {
 		display: flex;
 		align-items: flex-start;
@@ -449,12 +579,6 @@ const [latest] = await getPosts();
 		color: var(--meta);
 		font-size: 13px;
 		line-height: 1.5;
-	}
-
-	/* Category and read time only appear in the compact mobile row */
-	.note-category,
-	.note-read {
-		display: none;
 	}
 
 	/* ---------- Get in touch ---------- */
@@ -665,108 +789,328 @@ const [latest] = await getPosts();
 		}
 	}
 
-	/* ---------- Mobile (<768px) ---------- */
+	/* ---------- Mobile (<768px): its own, shorter layout ---------- */
 	@media (max-width: 767px) {
+		/* Intro */
+		.hero {
+			display: block;
+			padding-top: 24px;
+		}
+
+		.m-author {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+
+		.m-author :global(img) {
+			flex: none;
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+			object-fit: cover;
+			object-position: 45% 30%;
+		}
+
+		.m-author-text {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+
+		.m-author-name {
+			color: var(--ink);
+			font-size: 15px;
+			font-weight: 600;
+			line-height: 1.3;
+		}
+
+		.m-author-role {
+			color: var(--meta);
+			font-size: 13px;
+			line-height: 1.3;
+		}
+
+		.m-author-open {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			color: var(--success);
+			font-size: 12px;
+			font-weight: 600;
+			line-height: 1.3;
+		}
+
+		.m-dot {
+			width: 7px;
+			height: 7px;
+			border-radius: 50%;
+			background: var(--success);
+		}
+
 		h1 {
-			font-size: 40px;
+			margin-top: 20px;
+			font-size: 32px;
+			letter-spacing: -0.03em;
+			line-height: 1.1;
 		}
 
 		.intro {
-			font-size: 16px;
+			margin-top: 12px;
+			font-size: 15px;
+			line-height: 1.5;
+		}
+
+		.hero-actions {
+			flex-wrap: nowrap;
+			gap: 12px;
+			margin-top: 20px;
 		}
 
 		.hero-actions .btn {
-			flex: 1 1 auto;
+			flex: 1;
+			min-width: 0;
+			padding: 0 16px;
+			font-size: 15px;
 		}
 
-		.portrait {
-			aspect-ratio: 4 / 5;
-			max-height: none;
-		}
-
-		.portrait :global(img) {
-			border-radius: 20px;
-		}
-
-		.block-inner {
-			padding-top: 32px;
-		}
-
-		.item-title {
-			font-size: 20px;
-		}
-
-		/* Latest notes: compact row card */
-		.note {
-			align-items: center;
-			gap: 14px;
-			padding: 12px;
-			border-radius: 16px;
-			background: var(--surface);
-		}
-
-		.note :global(.note-img) {
-			width: 88px;
-			height: 88px;
-			border-radius: 12px;
-		}
-
-		.note-text {
-			gap: 4px;
-		}
-
-		.note-meta {
-			font-size: 12px;
-		}
-
-		.note-category,
-		.note-read {
-			display: inline;
-		}
-
-		.note-read {
-			color: var(--meta);
-			font-size: 13px;
-		}
-
-		.note .item-title {
-			font-size: 17px;
-			line-height: 1.25;
-		}
-
-		.note-desc {
-			display: none;
-		}
-
-		/* "All posts" becomes a full-width secondary button */
-		.all-posts {
+		/* Shared section header row: title left, link right */
+		.m-head,
+		.work-block .block-head {
 			display: flex;
 			align-items: center;
-			justify-content: center;
-			height: 48px;
-			margin-top: 20px;
-			border: 1px solid var(--ink);
-			border-radius: 999px;
+			justify-content: space-between;
+			padding-bottom: 8px;
+			border-bottom: 1px solid var(--line);
+		}
+
+		.m-head h2,
+		.work-block .block-head h2,
+		.contact h2 {
+			color: var(--ink);
+			font-size: 22px;
+			font-weight: 500;
+			letter-spacing: -0.01em;
+			line-height: 1.2;
+		}
+
+		.m-head-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			min-height: 44px;
+			color: var(--ink);
+			font-size: 15px;
+			font-weight: 600;
 			text-decoration: none;
 		}
 
-		/* Bigger tap area for "All work" */
-		.text-link:not(.all-posts) {
-			margin-top: 20px;
-			padding: 12px 0;
+		.m-head-link svg,
+		.m-row-link svg,
+		.m-copy svg {
+			fill: none;
+			stroke: currentColor;
+			stroke-width: 2;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+
+		/* From the blog */
+		.m-blog {
+			margin-top: 40px;
+		}
+
+		.m-posts {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		.m-post {
+			display: flex;
+			align-items: center;
+			gap: 16px;
+			padding: 16px 0;
+			border-bottom: 1px solid var(--line);
+			color: inherit;
+			text-decoration: none;
+		}
+
+		.m-post :global(img) {
+			flex: none;
+			width: 88px;
+			height: 64px;
+			border-radius: 8px;
+			object-fit: cover;
+		}
+
+		.m-post-text {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+			min-width: 0;
+		}
+
+		.m-post-meta {
+			color: var(--meta);
+			font-size: 12px;
+			line-height: 1.4;
+		}
+
+		.m-post-title {
+			color: var(--ink);
+			font-size: 16px;
+			font-weight: 500;
+			line-height: 1.3;
+		}
+
+		/* Selected work: one item */
+		.block,
+		.work-block {
+			margin-top: 48px;
+		}
+
+		.block-inner {
+			display: block;
+			padding-top: 0;
+			border-top: 0;
+		}
+
+		.work li + li {
+			display: none;
+		}
+
+		.work li:first-child .work-item {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			padding: 16px 0;
+		}
+
+		.work-text {
+			display: contents;
+		}
+
+		.label {
+			font-size: 12px;
+		}
+
+		.work-item .item-title {
+			font-size: 18px;
+			line-height: 1.25;
+		}
+
+		.work-item .desc {
+			font-size: 15px;
+		}
+
+		.work-metric {
+			flex-direction: row;
+			align-items: baseline;
+			gap: 12px;
+			margin-top: 8px;
+			padding-left: 16px;
+			border-left: 1px solid var(--line);
+		}
+
+		.metric {
+			font-size: 32px;
+		}
+
+		.metric-label {
+			font-size: 14px;
+			line-height: 1.4;
+		}
+
+		/* Get in touch: a plain list, no card */
+		.contact-wrap {
+			margin-top: 48px;
 		}
 
 		.contact {
-			padding: 24px;
-			border-radius: 20px;
+			display: block;
+			padding: 0;
+			border-radius: 0;
+			background: none;
 		}
 
-		.contact h2 {
-			font-size: 36px;
+		.contact p {
+			margin: 8px 0 16px;
+			font-size: 15px;
 		}
 
-		.contact-buttons {
-			grid-template-columns: 1fr;
+		.m-contact {
+			margin: 0;
+			padding: 0;
+			border-top: 1px solid var(--line);
+			list-style: none;
+		}
+
+		.m-row {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			min-height: 64px;
+			border-bottom: 1px solid var(--line);
+		}
+
+		.m-row-main {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			min-width: 0;
+			min-height: 64px;
+			color: inherit;
+			text-decoration: none;
+		}
+
+		a.m-row-main {
+			flex: 1;
+		}
+
+		.m-row-label {
+			color: var(--meta);
+			font-size: 13px;
+			line-height: 1.4;
+		}
+
+		.m-row-value {
+			overflow: hidden;
+			color: var(--ink);
+			font-size: 16px;
+			font-weight: 500;
+			line-height: 1.4;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.m-row-link {
+			color: var(--ink);
+			text-decoration: none;
+		}
+
+		.m-copy {
+			display: grid;
+			flex: none;
+			place-items: center;
+			width: 44px;
+			height: 44px;
+			padding: 0;
+			border: 1px solid var(--chip-border);
+			border-radius: 50%;
+			background: transparent;
+			color: var(--ink);
+			cursor: pointer;
+		}
+
+		.m-copy .icon-check,
+		.m-copy[data-copied] .icon-copy {
+			display: none;
+		}
+
+		.m-copy[data-copied] .icon-check {
+			display: block;
 		}
 	}
 </style>

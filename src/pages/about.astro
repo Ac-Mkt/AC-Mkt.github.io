@@ -1,21 +1,21 @@
 ---
+import { Image } from 'astro:assets';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { AUTHOR, EDUCATION, EXPERIENCE, LANGUAGES } from '../data/author';
 import { absolute, ids, personNode } from '../utils/schema';
 
-const title = 'About | Ana Carolina Gomes';
+const title = 'About — Ana Carolina Gomes';
 const description =
-	'Ana Carolina Gomes is an SEO specialist in Belo Horizonte, Brazil, working across content, on-page and off-page SEO and brand visibility in AI search.';
+	'Ana Carolina Gomes is an SEO & GEO specialist in Belo Horizonte, Brazil, focused on link building, Digital PR and AI-assisted SEO workflows.';
 
-const experience = [
-	{ role: 'SEO Off-Page Specialist', company: 'Odds Scanner Group', dates: 'Jul 2024 – Present' },
-	{ role: 'Junior Off-Page Specialist', company: 'Odds Scanner Group', dates: 'Sep 2023 – Jul 2024' },
-	{ role: 'SEO Intern', company: 'GShield', dates: 'Feb 2023 – Sep 2023' },
-	{ role: 'Marketing Intern', company: 'BrunSker Tecnologia', dates: 'Sep 2022 – Nov 2022' },
+// Numbers row (phones)
+const numbers = [
+	{ value: '250–300', label: 'links / quarter' },
+	{ value: '20+', label: 'partners' },
+	{ value: '25%', label: 'lower cost / link' },
 ];
-
-const languages = ['Portuguese (native)', 'English (C1)', 'Spanish (A1)'];
 
 // ProfilePage + the full Person entity: this page is where the author lives.
 // Posts and the rest of the site point to it by @id.
@@ -39,78 +39,223 @@ const schema = [
 	</head>
 	<body>
 		<Header />
-		<main>
-			<header class="page-head">
-				<h1>About</h1>
-			</header>
+		<main class="about">
+			<!-- Tablet and desktop -->
+			<div class="d-only">
+				<header class="page-head">
+					<h1>About</h1>
+				</header>
 
-			<div class="layout">
-				<div class="story">
-					<p>
-						I started in marketing and found SEO through content. My first SEO role involved writing
-						optimized product content and running on-page audits for a high-traffic e-commerce site,
-						which taught me how much small technical fixes and clear writing can affect visibility.
-					</p>
-					<p>
-						Since 2023, I’ve focused on off-page SEO: building media partnerships, running outreach and
-						earning high-authority links across international markets. Today, I secure 250–300 links
-						per quarter, manage relationships with more than 20 media and affiliate partners, and have
-						reduced our average cost per link by 25% through better outreach and negotiation.
-					</p>
-					<p>
-						Some of my favorite work sits between SEO and operations. I built an AI-assisted workflow
-						with Claude Code and Python that turns a spreadsheet into ready-to-use content briefs,
-						sending AI tools only the data they actually need.
-					</p>
-					<p>
-						Right now, I’m deepening my skills in technical SEO, data analysis (SQL, BigQuery and Looker
-						Studio) and Generative Engine Optimization. I’m most interested in work that connects the
-						full picture, from content and technical SEO to authority and AI search.
-					</p>
+				<div class="layout">
+					<div class="story">
+						<p>
+							I started in marketing and found SEO through content. My first SEO role involved writing
+							optimized product content and running on-page audits for a high-traffic e-commerce site,
+							which taught me how much small technical fixes and clear writing can affect visibility.
+						</p>
+						<p>
+							Since 2023, I’ve focused on off-page SEO: building media partnerships, running outreach and
+							earning high-authority links across international markets. Today, I secure 250–300 links
+							per quarter, manage relationships with more than 20 media and affiliate partners, and have
+							reduced our average cost per link by 25% through better outreach and negotiation.
+						</p>
+						<p>
+							Some of my favorite work sits between SEO and operations. I built an AI-assisted workflow
+							with Claude Code and Python that turns a spreadsheet into ready-to-use content briefs,
+							sending AI tools only the data they actually need.
+						</p>
+						<p>
+							Right now, I’m deepening my skills in technical SEO, data analysis (SQL, BigQuery and Looker
+							Studio) and Generative Engine Optimization. I’m most interested in work that connects the
+							full picture, from content and technical SEO to authority and AI search.
+						</p>
 
-					<div class="actions">
-						<a class="btn btn-primary" href="/Ana-Carolina-Gomes-CV.pdf" download>Download CV</a>
-						<a class="btn" href="https://www.linkedin.com/in/anacpsg" rel="me">LinkedIn</a>
+						<div class="actions">
+							<a class="btn btn-primary" href={AUTHOR.cvUrl} download>Download CV</a>
+							<a class="btn" href={AUTHOR.linkedinUrl} rel="me">LinkedIn</a>
+						</div>
+					</div>
+
+					<aside class="facts">
+						<section>
+							<h2>Experience</h2>
+							<ul class="timeline">
+								{
+									EXPERIENCE.map((job) => (
+										<li>
+											<span class="job-role">{job.role}</span>
+											<span class="job-meta">
+												{job.company}, {job.dates}
+											</span>
+										</li>
+									))
+								}
+							</ul>
+						</section>
+
+						<section>
+							<h2>Education</h2>
+							<p class="fact">
+								<span class="job-role">{EDUCATION.degree}</span>
+								<span class="job-meta">{EDUCATION.school}, {EDUCATION.dates}</span>
+							</p>
+						</section>
+
+						<section>
+							<h2>Languages</h2>
+							<p class="fact">{LANGUAGES.map((l) => `${l.name} (${l.level})`).join(', ')}</p>
+						</section>
+					</aside>
+				</div>
+			</div>
+
+			<!-- Phones -->
+			<div class="m-only">
+				<div class="m-profile">
+					<Image
+						src={AUTHOR.photo}
+						alt="Ana Carolina Gomes"
+						width={80}
+						height={80}
+						densities={[1, 2, 3]}
+						loading="eager"
+					/>
+					<div class="m-profile-text">
+						<h1>{AUTHOR.name}</h1>
+						<span class="m-role">{AUTHOR.jobTitle} · Belo Horizonte</span>
+						<span class="m-open"><span class="m-dot" aria-hidden="true"></span>Open to new roles</span>
 					</div>
 				</div>
 
-				<aside class="facts">
-					<section>
-						<h2>Experience</h2>
-						<ul class="timeline">
+				<p class="m-summary">
+					Almost four years in SEO, focused on off-page: media partnerships, outreach and high-authority
+					links across international markets.
+				</p>
+
+				<dl class="m-numbers">
+					{
+						numbers.map((n) => (
+							<div>
+								<dt>{n.label}</dt>
+								<dd>{n.value}</dd>
+							</div>
+						))
+					}
+				</dl>
+
+				<div class="m-buttons">
+					<a class="btn btn-primary" href={AUTHOR.cvUrl} download>
+						<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+							<path d="M12 4v11M7 10l5 5 5-5M5 20h14" />
+						</svg>
+						Download CV<span class="sr-only"> (PDF)</span>
+					</a>
+					<a class="btn" href={AUTHOR.linkedinUrl} target="_blank" rel="noopener me">
+						LinkedIn<span class="sr-only"> (opens in a new tab)</span>
+					</a>
+				</div>
+
+				<div class="m-sections">
+					<details open>
+						<summary>
+							<span class="m-sum-text"><h2>My story</h2></span>
+							<svg class="i-plus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+							<svg class="i-minus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /></svg>
+						</summary>
+						<div class="m-story">
+							<p>
+								I started in marketing and found SEO through content. My first SEO role involved writing
+								optimized product content and running on-page audits for a high-traffic e-commerce site,
+								which taught me how much small technical fixes and clear writing can affect visibility.
+							</p>
+							<p>
+								Since 2023, I've focused on off-page SEO: building media partnerships, running outreach
+								and earning high-authority links across international markets.
+							</p>
+							<p>
+								Some of my favorite work sits between SEO and operations, like an AI-assisted workflow with
+								Claude Code and Python that turns a spreadsheet into ready-to-use content briefs.
+							</p>
+							<p>
+								Right now, I'm deepening my skills in technical SEO, data analysis (SQL, BigQuery and
+								Looker Studio) and Generative Engine Optimization.
+							</p>
+						</div>
+					</details>
+
+					<details>
+						<summary>
+							<span class="m-sum-text">
+								<h2>Experience</h2>
+								<span class="m-oneline">4 roles · SEO Off-Page Specialist since Jul 2024</span>
+							</span>
+							<svg class="i-plus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+							<svg class="i-minus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /></svg>
+						</summary>
+						<ol class="m-list">
 							{
-								experience.map((job) => (
+								EXPERIENCE.map((job) => (
 									<li>
-										<span class="job-role">{job.role}</span>
-										<span class="job-meta">
-											{job.company}, {job.dates}
+										<span class="m-item">{job.role}</span>
+										<span class="m-item-meta">
+											{job.company} · {job.dates}
 										</span>
 									</li>
 								))
 							}
-						</ul>
-					</section>
+						</ol>
+					</details>
 
-					<section>
-						<h2>Education</h2>
-						<p class="fact">
-							<span class="job-role">Higher Education Degree (CST) in Marketing</span>
-							<span class="job-meta">Universidade Estácio de Sá, 2022 – 2024</span>
+					<details>
+						<summary>
+							<span class="m-sum-text">
+								<h2>Education</h2>
+								<span class="m-oneline">CST in Marketing · Estácio, 2022 – 2024</span>
+							</span>
+							<svg class="i-plus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+							<svg class="i-minus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /></svg>
+						</summary>
+						<p class="m-edu">
+							<span class="m-item">{EDUCATION.degree}</span>
+							<span class="m-item-meta">{EDUCATION.school} · {EDUCATION.dates}</span>
 						</p>
-					</section>
+					</details>
 
-					<section>
-						<h2>Languages</h2>
-						<p class="fact">{languages.join(', ')}</p>
-					</section>
-				</aside>
+					<details>
+						<summary>
+							<span class="m-sum-text">
+								<h2>Languages</h2>
+								<span class="m-oneline">Portuguese, English (C1), Spanish (A1)</span>
+							</span>
+							<svg class="i-plus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+							<svg class="i-minus" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /></svg>
+						</summary>
+						<ul class="m-langs">
+							{LANGUAGES.map((l) => <li>{l.name} — {l.level}</li>)}
+						</ul>
+					</details>
+				</div>
 			</div>
 		</main>
-		<Footer />
+		<Footer compact />
 	</body>
 </html>
 
 <style>
+	/* Phone and wider-screen variants (below / from 768px) */
+	@media (min-width: 768px) {
+		.m-only {
+			display: none !important;
+		}
+	}
+
+	@media (max-width: 767px) {
+		.d-only {
+			display: none !important;
+		}
+	}
+
+	/* ---------- Tablet and desktop (unchanged) ---------- */
 	.page-head {
 		max-width: 48rem;
 	}
@@ -176,6 +321,261 @@ const schema = [
 	@media (max-width: 860px) {
 		.layout {
 			grid-template-columns: 1fr;
+		}
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	/* ---------- Phones (<768px) ---------- */
+	@media (max-width: 767px) {
+		.about {
+			padding-top: 24px;
+			padding-bottom: 0;
+		}
+
+		/* Profile */
+		.m-profile {
+			display: flex;
+			align-items: center;
+			gap: 16px;
+		}
+
+		.m-profile :global(img) {
+			flex: none;
+			width: 80px;
+			height: 80px;
+			border-radius: 50%;
+			object-fit: cover;
+			object-position: 45% 30%;
+		}
+
+		.m-profile-text {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+			min-width: 0;
+		}
+
+		.m-profile h1 {
+			margin: 0;
+			color: var(--ink);
+			font-size: 26px;
+			font-weight: 500;
+			letter-spacing: -0.02em;
+			line-height: 1.15;
+		}
+
+		.m-role {
+			color: var(--meta);
+			font-size: 14px;
+			line-height: 1.4;
+		}
+
+		.m-open {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			margin-top: 2px;
+			color: var(--success);
+			font-size: 12px;
+			font-weight: 600;
+			line-height: 1.4;
+		}
+
+		.m-dot {
+			width: 7px;
+			height: 7px;
+			border-radius: 50%;
+			background: var(--success);
+		}
+
+		.m-summary {
+			margin: 20px 0 0;
+			color: var(--ink-2);
+			font-size: 16px;
+			line-height: 1.5;
+		}
+
+		/* Numbers */
+		.m-numbers {
+			display: flex;
+			flex-wrap: nowrap;
+			gap: 20px;
+			margin: 20px 0 0;
+		}
+
+		.m-numbers div {
+			display: flex;
+			flex-direction: column-reverse; /* value above label; <dt> stays first in the HTML */
+			min-width: 0;
+		}
+
+		.m-numbers div + div {
+			padding-left: 20px;
+			border-left: 1px solid var(--line);
+		}
+
+		.m-numbers dd {
+			margin: 0;
+			color: var(--ink);
+			font-size: 24px;
+			font-weight: 500;
+			letter-spacing: -0.03em;
+			line-height: 1.2;
+			white-space: nowrap;
+		}
+
+		.m-numbers dt {
+			color: var(--meta);
+			font-size: 12px;
+			line-height: 1.4;
+		}
+
+		/* Buttons */
+		.m-buttons {
+			display: flex;
+			gap: 12px;
+			margin-top: 24px;
+		}
+
+		.m-buttons .btn {
+			flex: 1;
+			gap: 8px;
+			min-width: 0;
+			padding: 0 16px;
+			font-size: 15px;
+		}
+
+		.m-buttons svg {
+			flex: none;
+			fill: none;
+			stroke: currentColor;
+			stroke-width: 2;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+
+		/* Collapsible sections */
+		.m-sections {
+			margin-top: 40px;
+			border-top: 1px solid var(--line);
+		}
+
+		details {
+			border-bottom: 1px solid var(--line);
+		}
+
+		summary {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
+			min-height: 64px;
+			list-style: none;
+			cursor: pointer;
+		}
+
+		summary::-webkit-details-marker {
+			display: none;
+		}
+
+		.m-sum-text {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+			min-width: 0;
+		}
+
+		summary h2 {
+			margin: 0;
+			color: var(--ink);
+			font-size: 19px;
+			font-weight: 500;
+			letter-spacing: 0;
+			line-height: 1.3;
+		}
+
+		.m-oneline {
+			color: var(--meta);
+			font-size: 13px;
+			line-height: 1.4;
+		}
+
+		details[open] .m-oneline {
+			display: none;
+		}
+
+		summary svg {
+			flex: none;
+			fill: none;
+			stroke: var(--ink);
+			stroke-width: 2;
+			stroke-linecap: round;
+		}
+
+		.i-minus,
+		details[open] .i-plus {
+			display: none;
+		}
+
+		details[open] .i-minus {
+			display: block;
+		}
+
+		details > :not(summary) {
+			margin: 0;
+			padding-bottom: 20px;
+		}
+
+		.m-story {
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+		}
+
+		.m-story p {
+			margin: 0;
+			color: var(--muted);
+			font-size: 15px;
+			line-height: 1.55;
+		}
+
+		.m-list,
+		.m-langs {
+			padding-left: 0;
+			list-style: none;
+		}
+
+		.m-list li + li {
+			margin-top: 16px;
+		}
+
+		.m-item {
+			display: block;
+			color: var(--ink);
+			font-size: 16px;
+			font-weight: 500;
+			line-height: 1.35;
+		}
+
+		.m-item-meta {
+			display: block;
+			color: var(--meta);
+			font-size: 13px;
+			line-height: 1.4;
+		}
+
+		.m-langs li {
+			color: var(--ink);
+			font-size: 16px;
+			line-height: 1.6;
 		}
 	}
 </style>

@@ -130,7 +130,11 @@ const contactCurrent = isActive(Astro.url.pathname, '/contact/');
 	/* Mobile: logo only; the floating menu in MobileNav.astro replaces the nav */
 	@media (max-width: 767px) {
 		.site-header {
-			height: 64px;
+			height: 56px;
+		}
+
+		.brand-name {
+			font-size: 17px;
 		}
 
 		.nav {

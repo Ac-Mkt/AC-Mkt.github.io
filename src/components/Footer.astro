@@ -1,11 +1,17 @@
 ---
 import { NAV_LINKS } from '../consts';
 
+interface Props {
+	// Phones: links first, then ©, no LinkedIn (homepage and About)
+	compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
 const year = new Date().getFullYear();
 const links = NAV_LINKS.filter((link) => link.href !== '/contact/');
 ---
 
-<footer class="site-footer container">
+<footer class:list={['site-footer', 'container', { compact }]}>
 	<div class="inner">
 		<p>&copy; {year} Ana Carolina Gomes</p>
 		<nav aria-label="Footer">
@@ -17,7 +23,7 @@ const links = NAV_LINKS.filter((link) => link.href !== '/contact/');
 						</li>
 					))
 				}
-				<li>
+				<li class="linkedin">
 					<a href="https://www.linkedin.com/in/anacpsg" rel="me">LinkedIn</a>
 				</li>
 			</ul>
@@ -79,8 +85,32 @@ const links = NAV_LINKS.filter((link) => link.href !== '/contact/');
 		}
 
 		a {
-			display: inline-block;
-			padding: 12px 0;
+			display: inline-flex;
+			align-items: center;
+			min-height: 44px;
+		}
+
+		/* Compact variant (homepage, About) */
+		.compact {
+			margin-top: 40px;
+		}
+
+		.compact .inner {
+			gap: 12px;
+			min-height: 0;
+			padding: 16px 0 calc(88px + env(safe-area-inset-bottom));
+		}
+
+		.compact nav {
+			order: -1;
+		}
+
+		.compact ul {
+			gap: 0 20px;
+		}
+
+		.compact .linkedin {
+			display: none;
 		}
 	}
 </style>
