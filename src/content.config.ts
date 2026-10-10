@@ -43,6 +43,8 @@ const caseStudies = defineCollection({
 			.optional(),
 		pubDate: z.coerce.date(),
 		tools: z.array(z.string()).default([]),
+		// Full write-up as a PDF in public/, offered as a download on the case page
+		report: z.string().optional(),
 	}),
 });
 

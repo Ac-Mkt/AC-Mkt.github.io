@@ -7,6 +7,7 @@ metric:
   value: '66.5k'
   label: 'monthly US searches in a 6-keyword cluster; schema with zero errors'
 pubDate: 2026-10-07
+report: '/GreenSip-Capstone-Report-Ana-Carolina-Gomes.pdf'
 tools: ['WordStream Keyword Tool', 'Generative AI', 'TechnicalSEO.com Schema Generator', 'Schema.org Validator']
 ---
 
@@ -14,7 +15,7 @@ tools: ['WordStream Keyword Tool', 'Generative AI', 'TechnicalSEO.com Schema Gen
 
 ## The challenge
 
-GreenSip is a wellness tea brand built on honesty: no miracle detox, no promises of rapid weight loss. It needed a page for one of the highest-demand questions in its niche, **"green tea for weight loss"**, with 33,100 monthly searches in the US.
+GreenSip is a wellness tea brand built on honesty, with the tagline *"For a healthier, calmer everyday."* It presents tea as a gentle daily habit, never as a quick fix: no miracle detox, no promises of rapid weight loss. It needed a page for one of the highest-demand questions in its niche, **"green tea for weight loss"**, with 33,100 monthly searches in the US.
 
 That creates a tension. The query attracts hype-heavy content, but weight loss is a **YMYL** (Your Money or Your Life) topic, where Google expects accuracy and caution. The page had to rank for a popular query without making the claims that usually come with it, and it had to be structured so AI systems could understand and cite it.
 
@@ -23,8 +24,10 @@ That creates a tension. The query attracts hype-heavy content, but weight loss i
 The project combined three layers, each with a clear role:
 
 - **Traditional SEO as the foundation:** one keyword cluster mapped to one page, with every on-page element built around it.
-- **GEO thinking for the structure:** clear entities (green tea, catechins, EGCG, caffeine, matcha, extract supplements) and a clear outcome for the reader: an informed, safe choice, not a promise.
+- **GEO thinking for the structure** (Global, Entity, Outcome): a US audience, with measurements in both kg and lb; clear entities (green tea, catechins, EGCG, caffeine, matcha, extract supplements); and a clear outcome for the reader: an informed, safe choice, not a promise.
 - **AI for speed, with human judgment on every output:** AI generated options and drafts, and I selected, fact-checked and rewrote them.
+
+The work ran across three graded labs: a keyword and on-page plan, AI-assisted on-page and blog creation, and making the content machine-readable and answer-ready. A final report brought them together.
 
 The dominant intent was set as **informational**, with a layer of commercial investigation. The page's job is to reach people at the top of the funnel with useful, honest answers, and then guide them toward the brand.
 
@@ -34,14 +37,14 @@ The dominant intent was set as **informational**, with a layer of commercial inv
 
 I expanded the topic with WordStream's keyword tool (US market) and selected one primary keyword plus five supporting terms with the same search purpose. Lower-volume terms were kept on purpose: they usually mean less competition and add depth to the page.
 
-| Keyword | Intent | Monthly searches (US) |
-| --- | --- | --- |
-| Green tea for weight loss (primary) | Informational | 33,100 |
-| Tea to drink to lose weight | Informational | 9,900 |
-| Best tea to lose weight | Commercial investigation | 9,900 |
-| Beneficial teas for weight loss | Commercial investigation | 6,600 |
-| Matcha for weight loss | Informational | 6,600 |
-| When to drink green tea for weight loss | Informational | 480 |
+| Keyword | Intent | Monthly searches (US) | Role on the page |
+| --- | --- | --- | --- |
+| Green tea for weight loss (primary) | Informational | 33,100 | Core topic, in the H1 and title tag |
+| Tea to drink to lose weight | Informational | 9,900 | Broad variant for the intro and comparisons |
+| Best tea to lose weight | Commercial investigation | 9,900 | Positions green tea as the evidence-based choice |
+| Beneficial teas for weight loss | Commercial investigation | 6,600 | Supports the section on other teas |
+| Matcha for weight loss | Informational | 6,600 | Related entity and an internal link opportunity |
+| When to drink green tea for weight loss | Informational | 480 | Practical how-to section and FAQ |
 
 ### 2. On-page plan
 
@@ -49,7 +52,11 @@ All six terms were mapped to a single page at `/green-tea-for-weight-loss/`. The
 
 ### 3. AI-assisted refinement
 
-With the plan ready, I used generative AI to produce several options for each element, combining role-based and few-shot prompting, then chain-of-thought prompting for the GEO and AEO improvements. I picked the strongest option for each element based on clarity, keyword alignment and brand fit.
+With the plan ready, I used generative AI to produce several options for each element, combining role-based and few-shot prompting, then chain-of-thought prompting for the GEO and AEO improvements. I picked the strongest option for each element based on clarity, keyword alignment and brand fit. For the title, for example, the three candidates were:
+
+- *Green tea for weight loss: what the research actually shows*
+- *Green tea for weight loss: realistic benefits and safe use* (selected: "realistic" counters the hype, and "safe use" covers side effects without sounding alarmist)
+- *Green tea for weight loss: how catechins and caffeine work*
 
 | Element | Before | After | Why it's better |
 | --- | --- | --- | --- |
@@ -57,7 +64,14 @@ With the plan ready, I used generative AI to produce several options for each el
 | Meta description | Does green tea really help with weight loss? See what the science says, when to drink it, and how it compares to matcha and other teas. | Does green tea help with weight loss? See what studies show, how big the effect really is, and how to fit it into a balanced routine. | Mirrors the searched question, keeps one clear promise and ends with a call to action |
 | H1 | Green tea for weight loss: does it really work? | Green tea for weight loss: how it helps and how to use it well | Drops the yes/no framing and promises both an answer and practical guidance |
 
-AI also produced the first draft of the article. I reviewed it by hand for factual accuracy, natural keyword use, readability and GreenSip's warm, evidence-based tone.
+The outline was also rebuilt to follow the reader's journey: does it work, how to use it, which tea to choose (including matcha, extract supplements, black tea and coffee), common mistakes, and who should be careful.
+
+AI also produced the first draft of the article. I reviewed it by hand in four areas:
+
+- **Accuracy:** every health claim is factual, cautious and backed by research.
+- **Brand voice:** no hype, and GreenSip's warm, evidence-based tone throughout.
+- **Consistency:** titles, headings, FAQs and schema all match each other.
+- **Technical quality:** the schema was built and validated without AI (see step 5).
 
 ### 4. Answer-ready structure
 
@@ -73,7 +87,7 @@ The answer capsule:
 
 ### 5. Structured data
 
-I built two JSON-LD blocks: **BlogPosting** (with author, publisher, logo and a stable `@id`) and **FAQPage** (matching the six FAQs word for word). Both were created with the TechnicalSEO.com Schema Markup Generator, without AI, and checked against the visible page content to avoid mismatches.
+The article carries visible trust signals: an author with a relevant role (a fictional nutrition research lead), the publisher with its logo, and publication dates. I built two JSON-LD blocks that repeat them: **BlogPosting** (with author, publisher, logo and a stable `@id`) and **FAQPage** (matching the six FAQs word for word). Both were created with the TechnicalSEO.com Schema Markup Generator, without AI, and checked against the visible page content to avoid mismatches.
 
 ## Results
 
@@ -90,3 +104,5 @@ If the page went live, I would track organic traffic and rankings for the cluste
 - **On a YMYL topic, honesty is the strategy.** Setting realistic expectations and adding a "who should be careful" section makes the page more trustworthy for readers and search engines alike.
 - **AI is fast at options, and the real work is choosing.** Generating three titles takes seconds. Knowing which one fits the intent, the brand and the facts is the part that matters.
 - **Schema has to mirror the page.** Structured data only helps when it matches what users actually see, so every FAQ in the markup is identical to the one on the page.
+
+The [full capstone report](/GreenSip-Capstone-Report-Ana-Carolina-Gomes.pdf) (PDF, 33 pages) includes every template, the AI options log, the complete blog draft, all six FAQ answers and the JSON-LD with its validation screenshots.

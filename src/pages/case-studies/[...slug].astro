@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const { title, description, metric, status, tools, pubDate } = entry.data;
+const { title, description, metric, status, tools, pubDate, report } = entry.data;
 const type = CASE_TYPE_LONG[entry.data.type];
 const result = metric ? `${metric.value} ${metric.label}` : status ? `${status.label}: ${status.note}` : '';
 
@@ -94,6 +94,16 @@ const schema = [
 				</div>
 			</dl>
 
+			{
+				report && (
+					<p class="report">
+						<a class="btn btn-primary" href={report} download>
+							Download the full case study<span class="sr-only"> (PDF)</span>
+						</a>
+					</p>
+				)
+			}
+
 			<article class="prose body">
 				<Content />
 			</article>
@@ -163,6 +173,10 @@ const schema = [
 		line-height: 1.45;
 	}
 
+	.report {
+		margin: 32px 0 0;
+	}
+
 	.body {
 		max-width: 680px;
 		margin: 64px auto 0;
@@ -195,6 +209,10 @@ const schema = [
 		.facts {
 			grid-template-columns: 1fr;
 			gap: 16px;
+		}
+
+		.report .btn {
+			width: 100%;
 		}
 
 		.body {
