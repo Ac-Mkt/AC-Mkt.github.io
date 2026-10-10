@@ -3,8 +3,8 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 const blog = defineCollection({
-	// Load Markdown and MDX files in the `src/content/blog/` directory.
-	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
+	// Markdown files in src/content/blog/
+	loader: glob({ base: './src/content/blog', pattern: '**/*.md' }),
 	// Type-check frontmatter using a schema
 	schema: ({ image }) =>
 		z.object({
@@ -26,7 +26,7 @@ const blog = defineCollection({
 });
 
 const caseStudies = defineCollection({
-	loader: glob({ base: './src/content/case-studies', pattern: '**/*.{md,mdx}' }),
+	loader: glob({ base: './src/content/case-studies', pattern: '**/*.md' }),
 	// A case with a Markdown body gets its own page (/case-studies/<slug>/); one without
 	// is listed as a plain, non-clickable row. See src/utils/cases.ts.
 	schema: z.object({

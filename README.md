@@ -1,8 +1,8 @@
-# ACmkt: Ana Carolina Gomes, SEO & Digital PR
+# ACmkt: Ana Carolina Gomes, SEO & GEO
 
 Source code of my portfolio, live at **[ac-mkt.github.io](https://ac-mkt.github.io)**.
 
-I'm an SEO and Digital PR specialist based in Belo Horizonte, Brazil, working on link acquisition, media partnerships and AI-assisted SEO workflows. The site holds my case studies, skills, blog and CV.
+I'm an SEO & GEO specialist based in Belo Horizonte, Brazil, working across content, on-page and off-page SEO, with a focus on link building and Digital PR. The site holds my case studies, skills, blog and CV.
 
 ## Built with
 
@@ -14,45 +14,71 @@ I'm an SEO and Digital PR specialist based in Belo Horizonte, Brazil, working on
 ## SEO and GEO built in
 
 - Canonical URLs, Open Graph and Twitter card tags on every page
-- JSON-LD schema: `WebSite`, `Person`, `WebPage`, `ProfilePage`, `BlogPosting`, `Article` and `BreadcrumbList`, linked by `@id`
+- One JSON-LD graph per page, linked by `@id`: `WebSite` everywhere; `ProfilePage` + `Person` (with `knowsAbout`, `hasCredential`, `worksFor`) on About; `BlogPosting`, `FAQPage` (read from the post's FAQ section) and `Blog` on the blog; `Article` and `CollectionPage` on case studies; `ContactPage`, `WebPage` and `BreadcrumbList` elsewhere
 - XML sitemap, RSS feed and a `robots.txt` that welcomes AI search crawlers
 - Auto-generated [`/llms.txt`](https://ac-mkt.github.io/llms.txt) summarizing the site for AI assistants
-- Table of contents, author box and dated bylines on blog posts
+- Bylines, author box, word count and reading time on every post, from one author file
 
 ## Project structure
 
 ```text
-public/                  Static files: CV, favicon, default social image, robots.txt
+public/                    CV, favicons, default social image, robots.txt
 src/
-├── components/          BaseHead (meta + schema), Header, Footer, CaseList
+├── assets/                Images processed by Astro (portrait, post covers)
+├── components/
+│   ├── BaseHead.astro     <head>: meta tags, social cards, font, JSON-LD
+│   ├── SchemaGraph.astro  The page's JSON-LD graph
+│   ├── Header.astro       Sticky header (+ MobileNav.astro, the floating menu on phones)
+│   ├── Footer.astro
+│   └── Collapsible.astro  Native <details> section used on phones (About, Skills)
 ├── content/
-│   ├── blog/            Blog posts (Markdown)
-│   └── case-studies/    Case studies (Markdown)
+│   ├── blog/              Blog posts (Markdown)
+│   └── case-studies/      Case studies (Markdown)
+├── data/
+│   ├── author.ts          Name, bio, links, experience, education, languages
+│   └── skills.ts          Skill areas, "currently learning" and certifications
 ├── layouts/BlogPost.astro
-├── pages/               One file per route, plus rss.xml and llms.txt
-├── styles/global.css    Palette, typography and shared styles
-├── consts.ts            Site title, description and certifications
-└── content.config.ts    Frontmatter schemas
+├── pages/                 One file per route, plus 404, rss.xml and llms.txt
+├── styles/global.css      Design tokens, base type, buttons and shared page styles
+├── utils/                 Dates, reading time, posts, case studies, FAQ, schema helpers
+├── consts.ts              Site title, description and navigation
+└── content.config.ts      Frontmatter schemas
 ```
 
 ## Adding content
 
-**Case study:** add a Markdown file to `src/content/case-studies/`:
+**Blog post:** add a Markdown file to `src/content/blog/`:
+
+```yaml
+---
+title: 'Post title'
+description: 'One or two sentences.'
+pubDate: 2026-10-07
+category: 'SEO basics' # becomes a topic filter on /blog/
+image: '../../assets/my-cover.jpg' # a file in src/assets/
+imageAlt: 'What the image shows'
+# Optional: updatedDate, tags: ['...'], imageCredit, imageCreditUrl, draft: true
+---
+```
+
+A `## FAQ` section with `### Question` headings is turned into `FAQPage` schema automatically.
+
+**Case study:** add a Markdown file to `src/content/case-studies/`. Write a body to give it its own page; leave it empty to list it as a plain row.
 
 ```yaml
 ---
 title: 'Case study title'
 description: 'One-sentence summary.'
-result: 'Headline result'
-type: 'Professional work' # or 'Course project', 'Personal project'
+type: 'professional' # or 'course', 'personal'
+order: 1 # lower numbers appear first
+metric: { value: '250+', label: 'links per quarter' } # or:
+# status: { label: 'In progress', tone: 'progress', note: 'Full write-up soon' }
 pubDate: 2026-10-07
-order: 1 # lower numbers appear first; the first three are featured on Home
 tools: ['Ahrefs', 'Python']
-status: 'published' # 'in-progress' lists it without a page
 ---
 ```
 
-**Blog post:** add a Markdown file to `src/content/blog/` with `title`, `description` and `pubDate`. Optional: `updatedDate`, `heroImage` (a file in `src/assets/`), `heroImageAlt`, `heroImageCredit` and `heroImageCreditUrl`.
+**Skills, experience, certifications:** edit `src/data/skills.ts` and `src/data/author.ts`. The pages, the schema and `llms.txt` all read from these files.
 
 ## Commands
 

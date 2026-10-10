@@ -5,7 +5,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Collapsible from '../components/Collapsible.astro';
 import { AUTHOR, EDUCATION, EXPERIENCE, LANGUAGES } from '../data/author';
-import { absolute, ids, personNode } from '../utils/schema';
+import { absolute, breadcrumb, ids, personNode } from '../utils/schema';
 
 const title = 'About — Ana Carolina Gomes';
 const description =
@@ -30,6 +30,10 @@ const schema = [
 		isPartOf: { '@id': ids(Astro.site).website },
 	},
 	await personNode(Astro.site),
+	breadcrumb(Astro.site, [
+		['Home', '/'],
+		['About', '/about/'],
+	]),
 ];
 ---
 
@@ -40,10 +44,10 @@ const schema = [
 	</head>
 	<body>
 		<Header />
-		<main class="about">
+		<main id="main" class="page">
 			<!-- Tablet and desktop -->
 			<div class="d-only">
-				<header class="page-head">
+				<header class="page-intro">
 					<h1>About</h1>
 				</header>
 
@@ -213,26 +217,12 @@ const schema = [
 </html>
 
 <style>
-	/* Phone and wider-screen variants (below / from 768px) */
-	@media (min-width: 768px) {
-		.m-only {
-			display: none !important;
-		}
-	}
+	/* Page padding, the intro and the phone/desktop variants come from global.css */
 
-	@media (max-width: 767px) {
-		.d-only {
-			display: none !important;
-		}
-	}
-
-	/* ---------- Tablet and desktop (unchanged) ---------- */
-	.page-head {
-		max-width: 48rem;
-	}
-
+	/* ---------- Tablet and desktop ---------- */
 	.layout {
 		display: grid;
+		margin-top: 64px;
 		grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
 		gap: clamp(2.5rem, 6vw, 6rem);
 		align-items: start;
@@ -253,7 +243,7 @@ const schema = [
 	.facts h2 {
 		margin-bottom: 1rem;
 		padding-bottom: 0.6rem;
-		border-bottom: 1px solid var(--rule);
+		border-bottom: 1px solid var(--line);
 		font-size: 1rem;
 		letter-spacing: 0;
 	}
@@ -295,22 +285,8 @@ const schema = [
 		}
 	}
 
-	.sr-only {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
-	}
-
 	/* ---------- Phones (<768px) ---------- */
 	@media (max-width: 767px) {
-		.about {
-			padding-top: 24px;
-			padding-bottom: 0;
-		}
-
 		/* Profile */
 		.m-profile {
 			display: flex;

@@ -1,0 +1,47 @@
+---
+// Shown by GitHub Pages for any address that doesn't exist
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const title = 'Page not found | Ana Carolina Gomes';
+const description = 'This page doesn’t exist or has moved.';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} noindex />
+	</head>
+	<body>
+		<Header />
+		<main id="main" class="page">
+			<header class="page-intro">
+				<h1>Page not found</h1>
+				<p>This page doesn’t exist or has moved. Try one of these instead:</p>
+			</header>
+			<div class="actions">
+				<a class="btn btn-primary" href="/">Go to the homepage</a>
+				<a class="btn" href="/case-studies/">See my work</a>
+				<a class="btn" href="/blog/">Read the blog</a>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.actions {
+		margin-top: 40px;
+	}
+
+	@media (max-width: 767px) {
+		.actions {
+			margin-top: 32px;
+		}
+
+		.actions .btn {
+			flex: 1 1 100%;
+		}
+	}
+</style>

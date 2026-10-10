@@ -10,6 +10,9 @@ const links = NAV_LINKS.filter((link) => link.href !== '/contact/');
 const contactCurrent = isActive(Astro.url.pathname, '/contact/');
 ---
 
+<!-- Lets keyboard and screen-reader users jump past the navigation -->
+<a class="skip" href="#main">Skip to content</a>
+
 <header class="site-header">
 	<div class="container inner">
 		<a href="/" class="brand" aria-label="ACmkt home">
@@ -41,6 +44,26 @@ const contactCurrent = isActive(Astro.url.pathname, '/contact/');
 <MobileNav />
 
 <style>
+	/* Hidden until it gets keyboard focus */
+	.skip {
+		position: fixed;
+		top: 12px;
+		left: 12px;
+		z-index: 60;
+		padding: 12px 20px;
+		border-radius: 999px;
+		background: var(--ink);
+		color: #fafaf8;
+		font-size: 15px;
+		font-weight: 600;
+		text-decoration: none;
+		transform: translateY(-200%);
+	}
+
+	.skip:focus-visible {
+		transform: none;
+	}
+
 	.site-header {
 		position: sticky;
 		top: 0;

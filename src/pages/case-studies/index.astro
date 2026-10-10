@@ -3,6 +3,7 @@ import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { CASE_TYPES, caseUrl, getCaseStudies, hasPage } from '../../utils/cases';
+import { absolute, breadcrumb, pageNode } from '../../utils/schema';
 
 const cases = await getCaseStudies();
 
@@ -20,51 +21,41 @@ const filters = [
 	})),
 ];
 
-// CollectionPage + ItemList (cases with their own page) + breadcrumb
-const siteUrl = (Astro.site ?? new URL('https://ac-mkt.github.io')).href.replace(/\/$/, '');
-const pageUrl = `${siteUrl}/case-studies/`;
-const linked = cases.filter(hasPage);
-const schema = {
-	'@context': 'https://schema.org',
-	'@graph': [
-		{
-			'@type': 'CollectionPage',
-			'@id': `${pageUrl}#collection`,
-			url: pageUrl,
-			name: 'Case studies',
-			description,
-			isPartOf: { '@id': `${siteUrl}/#website` },
+// CollectionPage listing the cases that have their own page, + breadcrumb
+const schema = [
+	pageNode(Astro.site, {
+		path: '/case-studies/',
+		name: 'Case studies',
+		description,
+		type: 'CollectionPage',
+		extra: {
 			mainEntity: {
 				'@type': 'ItemList',
-				itemListElement: linked.map((entry, i) => ({
+				itemListElement: cases.filter(hasPage).map((entry, i) => ({
 					'@type': 'ListItem',
 					position: i + 1,
 					name: entry.data.title,
-					url: `${siteUrl}${caseUrl(entry)}`,
+					url: absolute(Astro.site, caseUrl(entry)),
 				})),
 			},
 		},
-		{
-			'@type': 'BreadcrumbList',
-			itemListElement: [
-				{ '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
-				{ '@type': 'ListItem', position: 2, name: 'Case studies', item: pageUrl },
-			],
-		},
-	],
-};
+	}),
+	breadcrumb(Astro.site, [
+		['Home', '/'],
+		['Case studies', '/case-studies/'],
+	]),
+];
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} />
-		<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+		<BaseHead title={title} description={description} schema={schema} />
 	</head>
 	<body>
 		<Header />
-		<main class="cases">
-			<header class="intro">
+		<main id="main" class="page">
+			<header class="page-intro">
 				<h1>Case studies</h1>
 				<p>
 					Professional work, course projects and personal builds. Each one covers the challenge, the
@@ -170,28 +161,7 @@ const schema = {
 </html>
 
 <style>
-	/* ---------- Page ---------- */
-	.cases {
-		padding-top: 96px;
-		padding-bottom: 64px; /* + the footer's 64px top margin = 128px below the list */
-	}
-
-	.intro h1 {
-		margin: 0;
-		color: var(--ink);
-		font-size: 64px;
-		font-weight: 500;
-		letter-spacing: -0.03em;
-		line-height: 1.05;
-	}
-
-	.intro p {
-		max-width: 640px;
-		margin: 24px 0 0;
-		color: var(--ink-2);
-		font-size: 18px;
-		line-height: 1.5;
-	}
+	/* Page padding and the intro (.page, .page-intro) come from global.css */
 
 	/* ---------- Filters ---------- */
 	.filters {
@@ -359,21 +329,8 @@ const schema = {
 		background: var(--success);
 	}
 
-	.sr-only {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
-	}
-
 	/* ---------- ≥1600px ---------- */
 	@media (min-width: 1600px) {
-		.intro h1 {
-			font-size: 72px;
-		}
-
 		.row {
 			grid-template-columns: minmax(0, 1fr) 280px;
 		}
@@ -389,10 +346,6 @@ const schema = {
 
 	/* ---------- 768–1023px ---------- */
 	@media (max-width: 1023px) {
-		.intro h1 {
-			font-size: 48px;
-		}
-
 		.row {
 			grid-template-columns: 1fr;
 		}
@@ -410,14 +363,6 @@ const schema = {
 
 	/* ---------- <768px ---------- */
 	@media (max-width: 767px) {
-		.intro h1 {
-			font-size: 40px;
-		}
-
-		.intro p {
-			font-size: 16px;
-		}
-
 		/* One horizontally scrollable row that bleeds to the screen edges */
 		.filters {
 			flex-wrap: nowrap;

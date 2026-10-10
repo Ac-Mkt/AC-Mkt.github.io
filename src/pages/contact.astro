@@ -2,48 +2,62 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { AUTHOR, LANGUAGES } from '../data/author';
+import { breadcrumb, pageNode } from '../utils/schema';
 
 const title = 'Contact | Ana Carolina Gomes';
-const description =
-	'Get in touch with Ana Carolina Gomes, SEO specialist, by email or LinkedIn.';
+const description = 'Get in touch with Ana Carolina Gomes, SEO & GEO specialist, by email or LinkedIn.';
+
+// Working languages: the ones at C1 or native level
+const working = LANGUAGES.filter((l) => l.level === 'native' || l.level === 'C1').map((l) => l.name);
+
+const schema = [
+	pageNode(Astro.site, { path: '/contact/', name: 'Contact', description, type: 'ContactPage' }),
+	breadcrumb(Astro.site, [
+		['Home', '/'],
+		['Contact', '/contact/'],
+	]),
+];
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead title={title} description={description} schema={schema} />
 	</head>
 	<body>
 		<Header />
-		<main>
-			<header class="page-head">
+		<main id="main" class="page">
+			<header class="page-intro">
 				<h1>Let's talk</h1>
-				<p>
-					I'm always happy to talk about projects where search, content and brand come together.
-				</p>
+				<p>I'm always happy to talk about projects where search, content and brand come together.</p>
 			</header>
 
 			<dl class="channels">
 				<div>
 					<dt>Email</dt>
-					<dd><a href="mailto:contato.carolpss@gmail.com">contato.carolpss@gmail.com</a></dd>
+					<dd><a href={`mailto:${AUTHOR.email}`}>{AUTHOR.email}</a></dd>
 				</div>
 				<div>
 					<dt>LinkedIn</dt>
-					<dd><a href="https://www.linkedin.com/in/anacpsg" rel="me">linkedin.com/in/anacpsg</a></dd>
+					<dd>
+						<a href={AUTHOR.linkedinUrl} target="_blank" rel="noopener me">
+							{AUTHOR.linkedinUrl.replace(/^https:\/\/www\./, '')}<span class="sr-only"> (opens in a new tab)</span>
+						</a>
+					</dd>
 				</div>
 				<div>
 					<dt>Based in</dt>
-					<dd>Belo Horizonte, Brazil (UTC−3)</dd>
+					<dd>{AUTHOR.location} (UTC−3)</dd>
 				</div>
 				<div>
 					<dt>Working languages</dt>
-					<dd>Portuguese and English</dd>
+					<dd>{working.join(' and ')}</dd>
 				</div>
 			</dl>
 
 			<div class="actions">
-				<a class="btn" href="/Ana-Carolina-Gomes-CV.pdf" download>Download CV</a>
+				<a class="btn" href={AUTHOR.cvUrl} download>Download CV<span class="sr-only"> (PDF)</span></a>
 			</div>
 		</main>
 		<Footer />
@@ -51,48 +65,63 @@ const description =
 </html>
 
 <style>
+	/* Page padding and the intro (.page, .page-intro) come from global.css */
+
 	.channels {
-		max-width: 48rem;
-		margin: 0;
+		max-width: 720px;
+		margin: 64px 0 0;
+		border-top: 1px solid var(--line);
 	}
 
 	.channels div {
 		display: grid;
-		grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
-		gap: 0.5rem 2rem;
-		padding: 1.25rem 0;
-		border-top: 1px solid var(--rule);
-	}
-
-	.channels div:last-child {
-		border-bottom: 1px solid var(--rule);
+		grid-template-columns: 200px minmax(0, 1fr);
+		gap: 4px 24px;
+		align-items: baseline;
+		padding: 24px 0;
+		border-bottom: 1px solid var(--line);
 	}
 
 	dt {
-		color: var(--muted);
-		font-size: 0.9rem;
+		color: var(--meta);
+		font-size: 14px;
 	}
 
 	dd {
 		margin: 0;
 		color: var(--ink);
-		font-size: clamp(1.1rem, 2vw, 1.35rem);
+		font-size: 20px;
 		letter-spacing: -0.01em;
+		line-height: 1.4;
 		overflow-wrap: anywhere;
 	}
 
 	dd a {
 		text-decoration: underline;
 		text-decoration-thickness: 1px;
+		text-underline-offset: 4px;
 	}
 
 	.actions {
-		margin-top: 2.25rem;
+		margin-top: 40px;
 	}
 
-	@media (max-width: 600px) {
+	@media (max-width: 767px) {
+		.channels {
+			margin-top: 32px;
+		}
+
 		.channels div {
 			grid-template-columns: 1fr;
+			padding: 16px 0;
+		}
+
+		dd {
+			font-size: 17px;
+		}
+
+		.actions {
+			margin-top: 32px;
 		}
 	}
 </style>

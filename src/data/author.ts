@@ -12,6 +12,7 @@ export const AUTHOR = {
 	photo: portrait,
 	aboutUrl: '/about/',
 	caseStudiesUrl: '/case-studies/',
+	email: 'contato.carolpss@gmail.com',
 	linkedinUrl: 'https://www.linkedin.com/in/anacpsg',
 	cvUrl: '/Ana-Carolina-Gomes-CV.pdf',
 	// From the Skills page data

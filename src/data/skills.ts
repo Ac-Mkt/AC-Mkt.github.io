@@ -59,17 +59,16 @@ export const LEARNING: SkillArea = {
 
 export const CERTIFICATIONS_INTRO = {
 	title: 'Certifications',
-	description: 'Courses completed, with links to verify them.',
+	description: 'Courses completed.',
 };
 
 export const CERTIFICATIONS: Certification[] = [
-	// TODO: add the verification URLs for Semrush and Surfer
 	{
 		name: 'GenAI for SEO: A Hands-On Playbook',
 		issuer: 'IBM',
 		year: '2026',
 		url: 'https://www.coursera.org/account/accomplishments/verify/QT4B6JBXIM1C',
 	},
-	{ name: 'Mastering Digital PR with Brian Dean', issuer: 'Semrush', year: '2025', url: undefined },
-	{ name: 'Content Optimization Masterclass', issuer: 'Surfer', year: '2025', url: undefined },
+	{ name: 'Mastering Digital PR with Brian Dean', issuer: 'Semrush', year: '2025' },
+	{ name: 'Content Optimization Masterclass', issuer: 'Surfer', year: '2025' },
 ];

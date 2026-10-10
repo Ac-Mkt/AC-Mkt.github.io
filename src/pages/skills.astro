@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Collapsible from '../components/Collapsible.astro';
 import { CERTIFICATIONS, CERTIFICATIONS_INTRO, LEARNING, SKILL_AREAS } from '../data/skills';
+import { breadcrumb, pageNode } from '../utils/schema';
 
 // Closed-section summary on phones: the first 3 skills, then "+N" for the rest
 const areaSummary = (items: string[]) =>
@@ -13,28 +14,26 @@ const title = 'Skills — Ana Carolina Gomes';
 const description =
 	'SEO, GEO, link building, Digital PR and AI automation skills of Ana Carolina Gomes, with the tools she uses and the certifications she holds.';
 
-// Breadcrumb (the Person schema with knowsAbout and hasCredential is in BaseHead)
-const siteUrl = (Astro.site ?? new URL('https://ac-mkt.github.io')).href.replace(/\/$/, '');
-const breadcrumb = {
-	'@context': 'https://schema.org',
-	'@type': 'BreadcrumbList',
-	itemListElement: [
-		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
-		{ '@type': 'ListItem', position: 2, name: 'Skills', item: `${siteUrl}/skills/` },
-	],
-};
+// Page + breadcrumb. The skills and certifications themselves are on the Person
+// (knowsAbout, hasCredential), printed on the About page.
+const schema = [
+	pageNode(Astro.site, { path: '/skills/', name: 'Skills', description }),
+	breadcrumb(Astro.site, [
+		['Home', '/'],
+		['Skills', '/skills/'],
+	]),
+];
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} />
-		<script type="application/ld+json" set:html={JSON.stringify(breadcrumb)} />
+		<BaseHead title={title} description={description} schema={schema} />
 	</head>
 	<body>
 		<Header />
-		<main class="skills">
-			<header class="intro">
+		<main id="main" class="page">
+			<header class="page-intro">
 				<h1>Skills</h1>
 				<p class="d-only">
 					What I work with, grouped by area. For how these skills play out in practice, see the{' '}
@@ -182,34 +181,7 @@ const breadcrumb = {
 </html>
 
 <style>
-	/* ---------- Page ---------- */
-	.skills {
-		padding-top: 96px;
-		padding-bottom: 64px; /* + the footer's 64px top margin = 128px below the last row */
-	}
-
-	.intro h1 {
-		margin: 0;
-		color: var(--ink);
-		font-size: 64px;
-		font-weight: 500;
-		letter-spacing: -0.03em;
-		line-height: 1.05;
-	}
-
-	.intro p {
-		max-width: 640px;
-		margin: 24px 0 0;
-		color: var(--ink-2);
-		font-size: 18px;
-		line-height: 1.5;
-	}
-
-	.intro a {
-		color: inherit;
-		text-decoration: underline;
-		text-underline-offset: 4px;
-	}
+	/* Page padding and the intro (.page, .page-intro) come from global.css */
 
 	/* ---------- Rows ---------- */
 	.rows {
@@ -328,21 +300,8 @@ const breadcrumb = {
 		text-align: right;
 	}
 
-	.sr-only {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
-	}
-
 	/* ---------- ≥1600px ---------- */
 	@media (min-width: 1600px) {
-		.intro h1 {
-			font-size: 72px;
-		}
-
 		.row {
 			grid-template-columns: 320px minmax(0, 1fr);
 		}
@@ -362,10 +321,6 @@ const breadcrumb = {
 
 	/* ---------- 768–1023px ---------- */
 	@media (max-width: 1023px) {
-		.intro h1 {
-			font-size: 48px;
-		}
-
 		.row {
 			grid-template-columns: 1fr;
 			row-gap: 24px;
@@ -373,30 +328,13 @@ const breadcrumb = {
 	}
 
 	/* ---------- <768px ---------- */
-	/* Phone and wider-screen variants (below / from 768px) */
-	@media (min-width: 768px) {
-		.m-only {
-			display: none !important;
-		}
-	}
-
 	@media (max-width: 767px) {
-		.d-only {
-			display: none !important;
-		}
-
-		.skills {
-			padding-top: 24px;
-			padding-bottom: 0;
-		}
-
-		.intro h1 {
+		.page-intro h1 {
 			font-size: 32px;
-			letter-spacing: -0.03em;
 			line-height: 1.1;
 		}
 
-		.intro p {
+		.page-intro p {
 			margin-top: 12px;
 			font-size: 15px;
 			line-height: 1.5;

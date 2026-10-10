@@ -1,5 +1,6 @@
 ---
 import { NAV_LINKS } from '../consts';
+import { AUTHOR } from '../data/author';
 
 interface Props {
 	// Phones: links first, then ©, no LinkedIn (homepage, About, Skills, Blog)
@@ -15,7 +16,7 @@ const links = NAV_LINKS.filter((link) => link.href !== '/contact/');
 
 <footer class:list={['site-footer', 'container', { compact }]} style={`--footer-gap: ${mobileGap}px`}>
 	<div class="inner">
-		<p>&copy; {year} Ana Carolina Gomes</p>
+		<p>&copy; {year} {AUTHOR.name}</p>
 		<nav aria-label="Footer">
 			<ul>
 				{
@@ -26,7 +27,7 @@ const links = NAV_LINKS.filter((link) => link.href !== '/contact/');
 					))
 				}
 				<li class="linkedin">
-					<a href="https://www.linkedin.com/in/anacpsg" rel="me">LinkedIn</a>
+					<a href={AUTHOR.linkedinUrl} rel="me">LinkedIn</a>
 				</li>
 			</ul>
 		</nav>

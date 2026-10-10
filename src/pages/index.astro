@@ -6,13 +6,15 @@ import { getPosts, postUrl } from '../utils/posts';
 import { Image } from 'astro:assets';
 import portrait from '../assets/ana-carolina-gomes-color.jpg';
 import { formatDate, isoDate } from '../utils/date';
+import { AUTHOR } from '../data/author';
+import { pageNode } from '../utils/schema';
 
 const title = 'Ana Carolina Gomes — SEO and brand visibility';
 const description =
 	'How brands get found, trusted and cited in search: projects and notes from practice by Ana Carolina Gomes, SEO specialist in Belo Horizonte, Brazil.';
 
-const EMAIL = 'contato.carolpss@gmail.com';
-const LINKEDIN = 'https://www.linkedin.com/in/anacpsg';
+const EMAIL = AUTHOR.email;
+const LINKEDIN = AUTHOR.linkedinUrl;
 
 const work = [
 	{
@@ -39,6 +41,9 @@ const work = [
 	},
 ];
 
+// This page, about the author (the Person entity itself is on the About page)
+const schema = [pageNode(Astro.site, { path: '/', name: title, description })];
+
 // The two latest published posts (drafts excluded), on every breakpoint
 const latest = (await getPosts()).slice(0, 2);
 ---
@@ -46,11 +51,11 @@ const latest = (await getPosts()).slice(0, 2);
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead title={title} description={description} schema={schema} />
 	</head>
 	<body>
 		<Header />
-		<main class="home">
+		<main id="main" class="home">
 			<!-- Hero (on phones: author row, headline, short intro, buttons) -->
 			<section class="container hero" aria-labelledby="hero-title">
 				<div class="hero-text">
@@ -224,10 +229,10 @@ const latest = (await getPosts()).slice(0, 2);
 					<div>
 						<h2 id="contact-title">Get in touch</h2>
 						<p class="d-only">
-							A project in SEO or brand visibility, a role, or just want to compare notes? Email or
-							LinkedIn is the best way to reach me.
+							A project in SEO or brand visibility, or just want to compare notes? Email or LinkedIn is
+							the best way to reach me.
 						</p>
-						<p class="m-only">A project, a role, or just to compare notes.</p>
+						<p class="m-only">A project, or just to compare notes.</p>
 					</div>
 
 					<div class="contact-actions d-only">
@@ -324,18 +329,7 @@ const latest = (await getPosts()).slice(0, 2);
 		margin: 0;
 	}
 
-	/* Mobile-only and desktop-only variants (below / from 768px) */
-	@media (min-width: 768px) {
-		.m-only {
-			display: none !important;
-		}
-	}
-
-	@media (max-width: 767px) {
-		.d-only {
-			display: none !important;
-		}
-	}
+	/* .m-only / .d-only (phone and wider-screen variants) come from global.css */
 
 	.desc {
 		color: var(--muted);
@@ -632,15 +626,6 @@ const latest = (await getPosts()).slice(0, 2);
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 16px;
-	}
-
-	.sr-only {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
 	}
 
 	/* ---------- Large and widescreen (≥1600px) ---------- */
