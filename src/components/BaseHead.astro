@@ -52,7 +52,7 @@ const siteGraph = {
 			'@type': 'Person',
 			'@id': `${siteUrl}/#person`,
 			name: 'Ana Carolina Gomes',
-			jobTitle: 'SEO Specialist',
+			jobTitle: 'SEO & GEO Specialist',
 			url: `${siteUrl}/`,
 			sameAs: ['https://www.linkedin.com/in/anacpsg'],
 			address: { '@type': 'PostalAddress', addressLocality: 'Belo Horizonte', addressRegion: 'Minas Gerais', addressCountry: 'BR' },
@@ -90,7 +90,7 @@ const siteGraph = {
 <link rel="canonical" href={canonicalURL} />
 {noindex && <meta name="robots" content="noindex, follow" />}
 <meta name="author" content="Ana Carolina Gomes" />
-<meta name="theme-color" content="#efefef" />
+<meta name="theme-color" content="#efeeeb" />
 <meta name="generator" content={Astro.generator} />
 {googleVerification && <meta name="google-site-verification" content={googleVerification} />}
 
@@ -101,7 +101,13 @@ const siteGraph = {
 <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href={new URL('rss.xml', site)} />
 
 <!-- Self-hosted font, preloaded -->
-<Font cssVariable="--font-schibsted" preload />
+<Font
+	cssVariable="--font-hanken"
+	preload={[
+		{ weight: 400, style: 'normal', subset: 'latin' },
+		{ weight: 500, style: 'normal', subset: 'latin' },
+	]}
+/>
 
 <!-- Open Graph (LinkedIn, WhatsApp, Slack...) -->
 <meta property="og:type" content={type} />

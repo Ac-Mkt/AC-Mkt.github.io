@@ -1,54 +1,86 @@
 ---
+import { NAV_LINKS } from '../consts';
+
 const year = new Date().getFullYear();
+const links = NAV_LINKS.filter((link) => link.href !== '/contact/');
 ---
 
-<footer class="site-footer">
+<footer class="site-footer container">
 	<div class="inner">
 		<p>&copy; {year} Ana Carolina Gomes</p>
-		<a href="https://www.linkedin.com/in/anacpsg" rel="me">LinkedIn</a>
+		<nav aria-label="Footer">
+			<ul>
+				{
+					links.map((link) => (
+						<li>
+							<a href={link.href}>{link.label}</a>
+						</li>
+					))
+				}
+				<li>
+					<a href="https://www.linkedin.com/in/anacpsg" rel="me">LinkedIn</a>
+				</li>
+			</ul>
+		</nav>
 	</div>
 </footer>
 
 <style>
 	.site-footer {
-		padding: 2rem var(--gutter) 2.5rem;
+		margin-top: 64px;
 	}
 
 	.inner {
 		display: flex;
-		flex-wrap: wrap;
+		align-items: center;
 		justify-content: space-between;
-		gap: 1rem;
-		max-width: var(--content);
-		margin: 0 auto;
-		padding-top: 1.5rem;
-		border-top: 1px solid var(--rule);
-		color: var(--muted);
-		font-size: 0.85rem;
+		gap: 16px;
+		min-height: 96px;
+		border-top: 1px solid var(--line);
+		color: var(--meta);
+		font-size: 14px;
+		line-height: 1.5;
 	}
 
 	p {
 		margin: 0;
 	}
 
-	/* Padding gives a ~44px tap area; negative margin keeps the footer height */
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 24px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
 	a {
-		display: inline-block;
-		margin: -0.75rem 0;
-		padding: 0.75rem 0;
-		color: inherit;
+		color: var(--ink);
 		text-decoration: none;
 	}
 
 	a:hover {
-		color: var(--link);
 		text-decoration: underline;
+		text-underline-offset: 4px;
 	}
 
-	/* Mobile: leave room for the floating menu button (60px + 28px offset + home bar) */
-	@media (max-width: 720px) {
-		.site-footer {
-			padding-bottom: calc(124px + env(safe-area-inset-bottom));
+	/* Mobile: stacked; bigger tap areas; room at the bottom for the floating menu button */
+	@media (max-width: 767px) {
+		.inner {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 16px;
+			padding: 32px 0 calc(124px + env(safe-area-inset-bottom));
+		}
+
+		ul {
+			gap: 0 24px;
+		}
+
+		a {
+			display: inline-block;
+			padding: 12px 0;
 		}
 	}
 </style>

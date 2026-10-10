@@ -1,13 +1,17 @@
 ---
-// Site header. Desktop shows the links inline; below 720px only the logo stays here and
-// MobileNav takes over. Add, remove or reorder pages in NAV_LINKS (src/consts.ts).
+// Site header: sticky, logo on the left, links and a Contact button on the right.
+// Below 768px only the logo stays here and MobileNav takes over.
+// Add, remove or reorder pages in NAV_LINKS (src/consts.ts).
 import MobileNav from './MobileNav.astro';
-import { NAV_LINKS as links } from '../consts';
+import { NAV_LINKS } from '../consts';
 import { isActive } from '../utils/nav';
+
+const links = NAV_LINKS.filter((link) => link.href !== '/contact/');
+const contactCurrent = isActive(Astro.url.pathname, '/contact/');
 ---
 
 <header class="site-header">
-	<nav class="nav" aria-label="Main">
+	<div class="container inner">
 		<a href="/" class="brand" aria-label="ACmkt home">
 			<svg class="brand-mark" width="24" height="14" viewBox="0 0 24 14" aria-hidden="true">
 				<circle cx="6" cy="7" r="6" />
@@ -17,41 +21,49 @@ import { isActive } from '../utils/nav';
 			<span class="brand-name">ACmkt</span>
 		</a>
 
-		<ul class="links">
-			{
-				links.map((link) => (
-					<li>
-						<a href={link.href} aria-current={isActive(Astro.url.pathname, link.href) ? 'page' : undefined}>
-							{link.label}
-						</a>
-					</li>
-				))
-			}
-		</ul>
-	</nav>
+		<nav class="nav" aria-label="Main">
+			<ul class="links">
+				{
+					links.map((link) => (
+						<li>
+							<a href={link.href} aria-current={isActive(Astro.url.pathname, link.href) ? 'page' : undefined}>
+								{link.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<a class="contact" href="/contact/" aria-current={contactCurrent ? 'page' : undefined}>Contact</a>
+		</nav>
+	</div>
 </header>
 
 <MobileNav />
 
 <style>
 	.site-header {
-		padding: 1.5rem var(--gutter);
+		position: sticky;
+		top: 0;
+		z-index: 40;
+		height: 80px;
+		border-bottom: 1px solid var(--line-soft);
+		background: rgba(239, 238, 235, 0.92);
+		-webkit-backdrop-filter: blur(8px);
+		backdrop-filter: blur(8px);
 	}
 
-	.nav {
-		max-width: var(--content);
-		margin: 0 auto;
+	.inner {
 		display: flex;
-		flex-wrap: wrap;
 		align-items: center;
-		column-gap: clamp(2.5rem, 6vw, 5rem);
+		justify-content: space-between;
+		height: 100%;
 	}
 
 	.brand {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.55rem;
-		min-height: 2.75rem;
+		gap: 8px;
+		min-height: 44px;
 		color: var(--ink);
 		text-decoration: none;
 	}
@@ -61,44 +73,62 @@ import { isActive } from '../utils/nav';
 	}
 
 	.brand-name {
-		font-size: 1.1rem;
+		font-size: 18px;
 		font-weight: 600;
 		letter-spacing: -0.01em;
 	}
 
+	.nav {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+	}
+
 	.links {
 		display: flex;
-		gap: 1.9rem;
+		gap: 32px;
 		margin: 0;
 		padding: 0;
 		list-style: none;
 	}
 
 	.links a {
-		display: inline-block;
-		padding: 0.25rem 0;
 		color: var(--ink);
-		font-size: 0.9rem;
+		font-size: 15px;
 		text-decoration: none;
-		border-bottom: 1px solid transparent;
-		transition: border-color 0.15s ease;
 	}
 
 	.links a:hover,
 	.links a[aria-current='page'] {
-		border-bottom-color: currentColor;
+		text-decoration: underline;
+		text-underline-offset: 4px;
 	}
 
-	.brand:focus-visible,
-	.links a:focus-visible {
-		outline: 2px solid var(--ink);
-		outline-offset: 4px;
-		border-radius: 2px;
+	.contact {
+		display: inline-flex;
+		align-items: center;
+		height: 40px;
+		padding: 0 24px;
+		border-radius: 999px;
+		background: var(--ink);
+		color: #fafaf8;
+		font-size: 15px;
+		font-weight: 600;
+		text-decoration: none;
 	}
 
-	/* Mobile: the floating menu in MobileNav.astro replaces these links */
-	@media (max-width: 720px) {
-		.links {
+	.contact:hover {
+		background: var(--link);
+		color: #fafaf8;
+	}
+
+	/* Mobile: logo only; the floating menu in MobileNav.astro replaces the nav */
+	@media (max-width: 767px) {
+		.site-header {
+			height: 64px;
+		}
+
+		.nav {
 			display: none;
 		}
 	}

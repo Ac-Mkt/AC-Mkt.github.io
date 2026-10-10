@@ -1,15 +1,14 @@
 ---
-// Mobile navigation (below 720px): a floating button that opens a stack of pill links.
+// Mobile navigation (below 768px): a floating button that opens a stack of pill links.
 // The links are rendered here at build time and only hidden while closed, so they stay
 // crawlable. Desktop uses the regular links in Header.astro.
 import { NAV_LINKS } from '../consts';
 import { isActive } from '../utils/nav';
 
-// Order of the pills, top to bottom. "Contact" becomes the dark "Get in touch" pill.
-const ORDER = ['/case-studies/', '/blog/', '/about/', '/skills/'];
-const links = ORDER.map((href) => NAV_LINKS.find((link) => link.href === href)!).map((link) => ({
+// Same pages and order as the desktop header; "Contact" becomes the dark last pill
+const links = NAV_LINKS.filter((link) => link.href !== '/contact/').map((link) => ({
 	href: link.href,
-	label: link.short ?? link.label,
+	label: link.label,
 	current: isActive(Astro.url.pathname, link.href),
 }));
 const contactCurrent = isActive(Astro.url.pathname, '/contact/');
@@ -31,10 +30,7 @@ const contactCurrent = isActive(Astro.url.pathname, '/contact/');
 			}
 			<li style={`--i: ${links.length}`}>
 				<a class="pill pill-cta" href="/contact/" aria-current={contactCurrent ? 'page' : undefined}>
-					Get in touch
-					<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-						<path d="M5 12h14M13 6l6 6-6 6" />
-					</svg>
+					Contact
 				</a>
 			</li>
 		</ul>
@@ -108,7 +104,7 @@ const contactCurrent = isActive(Astro.url.pathname, '/contact/');
 		});
 
 		// Close if the window grows past the mobile breakpoint while open
-		window.matchMedia('(min-width: 721px)').addEventListener('change', (event) => {
+		window.matchMedia('(min-width: 768px)').addEventListener('change', (event) => {
 			if (event.matches && isOpen()) close(false);
 		});
 	}
@@ -120,7 +116,7 @@ const contactCurrent = isActive(Astro.url.pathname, '/contact/');
 		display: none;
 	}
 
-	@media (max-width: 720px) {
+	@media (max-width: 767px) {
 		.mnav {
 			display: block;
 		}
@@ -176,9 +172,9 @@ const contactCurrent = isActive(Astro.url.pathname, '/contact/');
 		height: 52px;
 		padding: 0 22px;
 		border-radius: 999px;
-		background: #fafaf8;
+		background: var(--surface);
 		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-		color: #161616;
+		color: var(--ink);
 		font-size: 19px;
 		font-weight: 500;
 		line-height: 1;
@@ -193,14 +189,14 @@ const contactCurrent = isActive(Astro.url.pathname, '/contact/');
 	}
 
 	.pill-cta {
-		background: #161616;
+		background: var(--ink);
 		color: #fff;
 		font-size: 17px;
 		font-weight: 600;
 	}
 
 	.pill:hover {
-		color: #161616;
+		color: var(--ink);
 	}
 
 	.pill-cta:hover {
@@ -228,7 +224,7 @@ const contactCurrent = isActive(Astro.url.pathname, '/contact/');
 		padding: 0;
 		border: 0;
 		border-radius: 50%;
-		background: #161616;
+		background: var(--ink);
 		box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
 		color: #fff;
 		cursor: pointer;

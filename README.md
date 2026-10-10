@@ -8,7 +8,7 @@ I'm an SEO and Digital PR specialist based in Belo Horizonte, Brazil, working on
 
 - [Astro](https://astro.build) (static site, no client-side framework)
 - Markdown content collections for case studies and blog posts
-- Self-hosted Schibsted Grotesk font through Astro's font API
+- Self-hosted Hanken Grotesk font through Astro's font API
 - GitHub Actions + GitHub Pages for deploys
 
 ## SEO and GEO built in

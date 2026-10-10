@@ -11,8 +11,8 @@ export default defineConfig({
 	fonts: [
 				{
 			provider: fontProviders.google(),
-			name: 'Schibsted Grotesk',
-			cssVariable: '--font-schibsted',
+			name: 'Hanken Grotesk',
+			cssVariable: '--font-hanken',
 			weights: [400, 500, 600],
 			styles: ['normal', 'italic'],
 			subsets: ['latin', 'latin-ext'],

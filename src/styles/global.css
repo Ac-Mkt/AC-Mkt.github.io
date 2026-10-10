@@ -2,19 +2,63 @@
 
 :root {
 	/* Palette */
-	--paper: #efefef;
-	--surface: #e3e3e0;
-	--rule: #d4d4d0;
-	--ink: #1f1f1f;
-	--text: #3a3a3a;
-	--muted: #5e5e5e;
-	--link: #1f3fbf; /* classic hyperlink blue */
+	--bg: #efeeeb; /* page background */
+	--surface: #fafaf8; /* cards, badge */
+	--ink: #161616; /* text, primary buttons */
+	--ink-2: #333333; /* hero intro text */
+	--muted: #3e3d3a; /* section and item descriptions */
+	--meta: #4a4a48; /* eyebrow, labels, dates, footer */
+	--line: #d4d3cf; /* dividers, field borders */
+	--line-soft: #dcdbd7; /* header bottom border */
+	--success: #1f7a4d; /* "Open to new roles" dot */
+	--link: #1f3fbf; /* hover colour for links */
 
-	/* Type and layout */
-	--font: var(--font-schibsted), 'Helvetica Neue', Arial, sans-serif;
-	--content: 1200px;
+	/* Older names, kept so every page uses the same palette */
+	--paper: var(--bg);
+	--rule: var(--line);
+	--text: var(--ink-2);
+
+	/* Type */
+	--font: var(--font-hanken), system-ui, sans-serif;
 	--prose: 42rem;
-	--gutter: clamp(1.25rem, 4vw, 3rem);
+
+	/* Layout: content width and side padding per breakpoint (see the media queries below) */
+	--container: 1088px;
+	--pad: 96px;
+	--content: calc(var(--container) + 2 * var(--pad)); /* outer width incl. padding */
+	--gutter: var(--pad);
+}
+
+@media (min-width: 1600px) {
+	:root {
+		--container: 1200px;
+	}
+}
+
+@media (max-width: 1279px) {
+	:root {
+		--pad: 64px;
+	}
+}
+
+@media (max-width: 1023px) {
+	:root {
+		--pad: 48px;
+	}
+}
+
+@media (max-width: 767px) {
+	:root {
+		--pad: 24px;
+	}
+}
+
+/* Centered content column used by the header, footer and homepage */
+.container {
+	width: 100%;
+	max-width: var(--content);
+	margin-inline: auto;
+	padding-inline: var(--pad);
 }
 
 *,
@@ -72,8 +116,8 @@ a:hover {
 }
 
 :focus-visible {
-	outline: 2px solid var(--link);
-	outline-offset: 3px;
+	outline: 2px solid var(--ink);
+	outline-offset: 2px;
 }
 
 img {
@@ -197,23 +241,31 @@ hr {
 	overflow-x: auto;
 }
 
-/* Buttons, used on Home and About */
+/* Buttons. .btn is the secondary (outlined) style; add .btn-primary for the filled one */
 .actions {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.75rem;
+	gap: 16px;
 }
 
 .btn {
 	display: inline-flex;
 	align-items: center;
-	padding: 0.8rem 1.4rem;
+	justify-content: center;
+	box-sizing: border-box;
+	height: 48px;
+	padding: 0 24px;
 	border: 1px solid var(--ink);
 	border-radius: 999px;
+	background: transparent;
 	color: var(--ink);
-	font-size: 0.95rem;
+	font: inherit;
+	font-size: 16px;
+	font-weight: 400;
 	line-height: 1;
 	text-decoration: none;
+	white-space: nowrap;
+	cursor: pointer;
 	transition:
 		background-color 0.15s ease,
 		border-color 0.15s ease,
@@ -223,7 +275,11 @@ hr {
 .btn:hover,
 .btn-primary {
 	background: var(--ink);
-	color: var(--paper);
+	color: #fafaf8;
+}
+
+.btn-primary {
+	font-weight: 600;
 }
 
 /* Classic hyperlink blue: a quiet nod to link building */
